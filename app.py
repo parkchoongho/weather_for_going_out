@@ -44,41 +44,41 @@ def main():
 
     # 하루에 8번 데이터 업데이트 됨. (0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300)
     # api를 가져오려는 시점의 이전 발표시각에 업데이트된 데이터를 base_time, base_date로 설정
-    if now.hour < 2 or (now.hour==2 and now.minute<=10): # 0시~2시 10분 사이
-        base_date=yesterday_date # 구하고자 하는 날짜가 어제의 날짜
-        base_time="2300"
-    elif now.hour<5 or (now.hour==5 and now.minute<=10): # 2시 11분~5시 10분 사이
-        base_date=today_date
-        base_time="0200"
-    elif now.hour<8 or (now.hour==8 and now.minute<=10): # 5시 11분~8시 10분 사이
-        base_date=today_date
-        base_time="0500"
-    elif now.hour<=11 or now.minute<=10: # 8시 11분~11시 10분 사이
-        base_date=today_date
-        base_time="0800"
-    elif now.hour<14 or (now.hour==14 and now.minute<=10): # 11시 11분~14시 10분 사이
-        base_date=today_date
-        base_time="1100"
-    elif now.hour<17 or (now.hour==17 and now.minute<=10): # 14시 11분~17시 10분 사이
-        base_date=today_date
-        base_time="1400"
-    elif now.hour<20 or (now.hour==20 and now.minute<=10): # 17시 11분~20시 10분 사이
-        base_date=today_date
-        base_time="1700" 
-    elif now.hour<23 or (now.hour==23 and now.minute<=10): # 20시 11분~23시 10분 사이
-        base_date=today_date
-        base_time="2000"
-    else: # 23시 11분~23시 59분
-        base_date=today_date
-        base_time="2300"
+    if now.hour < 2 or (now.hour == 2 and now.minute <= 10): # 0시~2시 10분
+        base_date = yesterday_date  # 발표날짜가 어제
+        base_time = "2300"
+    elif now.hour < 5 or (now.hour == 5 and now.minute <= 10):  # 2시 11분~5시 10분
+        base_date = today_date
+        base_time = "0200"
+    elif now.hour < 8 or (now.hour == 8 and now.minute <= 10):  # 5시 11분~8시 10분
+        base_date = today_date
+        base_time = "0500"
+    elif now.hour < 11 or (now.hour == 11 and now.minute <= 10):  # 8시 11분~11시 10분
+        base_date = today_date
+        base_time = "0800"
+    elif now.hour < 14 or (now.hour == 14 and now.minute <= 10):  # 11시 11분~14시 10분
+        base_date = today_date
+        base_time = "1100"
+    elif now.hour < 17 or (now.hour == 17 and now.minute <= 10):  # 14시 11분~17시 10분
+        base_date = today_date
+        base_time = "1400"
+    elif now.hour < 20 or (now.hour == 20 and now.minute <= 10):  # 17시 11분~20시 10분
+        base_date = today_date
+        base_time = "1700" 
+    elif now.hour < 23 or (now.hour == 23 and now.minute <= 10):  # 20시 11분~23시 10분
+        base_date = today_date
+        base_time = "2000"
+    else:  # 23시 11분 ~ 23시 59분
+        base_date = today_date
+        base_time = "2300"
 
     # 날짜, 예보시각, 위경도 정보 받아오는 변수로 수정해야 함.
     payload = "serviceKey=" + service_key + "&" +\
         "pageNo=" + '1' + '&' +\
         "numOfRows=" + '270' + '&' +\
         "dataType=json" + "&" +\
-        "base_date=" + today_date + "&" +\
-        "base_time=" + "0630" + "&" +\
+        "base_date=" + base_date + "&" +\
+        "base_time=" + base_time + "&" +\
         "nx=" + "62" + "&" +\
         "ny=" + "120"
 
