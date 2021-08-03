@@ -12,6 +12,8 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
 app.secret_key = 'sdkmcslkcmks'
+app.permanent_session_lifetime = timedelta(minutes=20)
+
 
 client = MongoClient('localhost', 27017)
 db = client.dbweather
@@ -138,7 +140,6 @@ def post_join():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-
         userId = request.form['user_id']
         password = request.form['password']
         user = db.users.find_one({'userId' : userId, 'password': password}, {'password' : False})
