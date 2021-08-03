@@ -90,8 +90,9 @@ def main():
     
     res = requests.get(weather_url + payload)
     items = res.json().get('response').get('body').get('items')
+    # print(items)
 
-    print(items)
+    
 
     return render_template('index.html')
 
@@ -137,7 +138,7 @@ def post_join():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-
+        
         userId = request.form['user_id']
         password = request.form['password']
         user = db.users.find_one({'userId' : userId, 'password': password}, {'password' : False})
