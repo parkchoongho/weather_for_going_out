@@ -1,9 +1,12 @@
-from flask import Flask, render_template, jsonify, request, make_response, redirect, url_for
+from flask import Flask, render_template, jsonify, request, redirect, url_for, session
 from pymongo import MongoClient
 from flask_bcrypt import Bcrypt
+from flask_session import Session
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
+
+app.secret_key = 'sdkmcslkcmks'
 
 client = MongoClient('localhost', 27017)
 db = client.dbweather
@@ -12,29 +15,26 @@ db = client.dbweather
 def home():
     return render_template('index.html')
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if cookie_check():
+    if request.method == "POST":
+
+        userId = request.form['user_id']
+        password = request.form['password']
+        user = db.users.find_one({'userId' : userId, 'password': password}, {'password' : False})
+        if user is None:
+            return redirect(url_for('login'))
+        session['userId'] = user['userId']
+        return redirect(url_for('home'))
+    if session_check():
         return redirect(url_for('home'))
     return render_template('login.html')
 
-@app.route('/login', methods=['POST'])
-def post_login():
-    userId = request.form['user_id']
-    password = request.form['password']
-    user = db.users.find_one({'userId' : userId, 'password': password}, {'password' : False})
-    resp = make_response(jsonify({'result':'success', 'msg':'POST 연결되었습니다!'}))
-    resp.set_cookie(key='userId', value=user['userId'], httponly=True)
-    resp.set_cookie(key='auth', value=bcrypt.generate_password_hash(user['userId'] + password), httponly=True)
-    return resp
+def session_check():
+    userId = session.get('userId')
+    if userId is None:
+        return False
+    return True
 
-def cookie_check():
-    user_id_cookie = request.cookies.get('userId')
-    auth_cookie = request.cookies.get('auth')
-    if user_id_cookie is not None and auth_cookie is not None:
-        user = db.users.find_one({'userId' : user_id_cookie})
-        is_auth_right = bcrypt.check_password_hash(auth_cookie, user_id_cookie + user['password'])
-        return is_auth_right
-   
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
