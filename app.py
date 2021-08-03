@@ -138,14 +138,14 @@ def post_join():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-        
+
         userId = request.form['user_id']
         password = request.form['password']
         user = db.users.find_one({'userId' : userId, 'password': password}, {'password' : False})
         if user is None:
             return redirect(url_for('login'))
         session['userId'] = user['userId']
-        return redirect(url_for('main'))
+        return jsonify({"result" : "success"})
     if session_check():
         return redirect(url_for('main'))
     return render_template('login.html')
