@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 from openpyxl import load_workbook
 from pymongo import MongoClient
 

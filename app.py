@@ -110,15 +110,17 @@ def update_user():
 
 @app.route('/join', methods=['GET'])
 def get_join():
-    return render_template('join.html')
- 
+    all_sido = list(db.grid.find({}))
+    print(all_sido)
+    return render_template('join.html', all_sido=all_sido)
+
 @app.route('/join', methods=['POST'])
 def post_join():
     # 1. 클라이언트로부터 데이터를 받기
-    userID_receive = request.form['userID_give']  # 클라이언트로부터 url을 받는 부분
-    pw_receive = request.form['pw_give']  # 클라이언트로부터 comment를 받는 부분
-    pw2_receive = request.form['pw2_give']  # 클라이언트로부터 comment를 받는 부분
-    area_receive = request.form['area_give']  # 클라이언트로부터 comment를 받는 부분
+    userID_receive = request.form['userID_give'] 
+    pw_receive = request.form['pw_give'] 
+    pw2_receive = request.form['pw2_give']
+    area_receive = request.form['area_give'] 
     goingToOffice_receive = request.form['goingToOffice_give']
     goingToOffice_receive2 = goingToOffice_receive[0:2]
     goingHome_receive = request.form['goingHome_give']

@@ -97,13 +97,15 @@
                 <label for="exampleInputPassword2">PW 확인</label>
                 <input id="pw2" type="password" class="form-control" placeholder="">
             </div>            
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="exampleInputEmail1">지역</label>
                 <input id="area" type="email" class="form-control" placeholder="">
-            </div>
-
-
-
+            </div> -->
+            <select name= all_sido method="GET" action="/">
+                {% for colour in colours %}
+                <option value= "{{all_sido}}" SELECTED>{{all_sido}}</option>"
+                {% endfor %}
+            </select>
 
             <div class="form-group">
                 <label for="exampleInputEmail1">출근 시간</label>
