@@ -22,6 +22,10 @@ db = client.dbweather
 
 @app.route('/')
 def main():
+    # session있는지 확인 없으면 로그인화면으로 리다이렉트
+    if session_check() == False:
+        return redirect(url_for('login'))
+
     # 기상청 단기예보 조회서비스 api 데이터 url 주소
     weather_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?"
 
@@ -140,9 +144,9 @@ def login():
         if user is None:
             return redirect(url_for('login'))
         session['userId'] = user['userId']
-        return redirect(url_for('home'))
+        return redirect(url_for('main'))
     if session_check():
-        return redirect(url_for('home'))
+        return redirect(url_for('main'))
     return render_template('login.html')
 
 def session_check():
