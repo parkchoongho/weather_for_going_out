@@ -135,55 +135,56 @@ def main():
             msg_list = []
             img = ''
             if tmp <= 5:
-                clothes_data = db.clothes.find({'high_TMP': 5})
+                clothes_data = db.clothes.find_one({'high_TMP': 5})
                 clothes_list.append(clothes_data['clothes'])
                 msg_list.append(clothes_data['msg'])
                 img = clothes_data['img']
             elif tmp <= 9:
-                clothes_data = db.clothes.find({'high_TMP': 9})
+                clothes_data = db.clothes.find_one({'high_TMP': 9})
                 clothes_list.append(clothes_data['clothes'])
                 msg_list.append(clothes_data['msg'])
                 if not img:
                     img = clothes_data['img']
             elif tmp <= 11:
-                clothes_data = db.clothes.find({'high_TMP': 11})
+                clothes_data = db.clothes.find_one({'high_TMP': 11})
                 clothes_list.append(clothes_data['clothes'])
                 msg_list.append(clothes_data['msg'])
                 if not img:
                     img = clothes_data['img']
             elif tmp <= 16:
-                clothes_data = db.clothes.find({'high_TMP': 16})
+                clothes_data = db.clothes.find_one({'high_TMP': 16})
                 clothes_list.append(clothes_data['clothes'])
                 msg_list.append(clothes_data['msg'])
                 if not img:
                     img = clothes_data['img']
             elif tmp <= 19:
-                clothes_data = db.clothes.find({'high_TMP': 19})
+                clothes_data = db.clothes.find_one({'high_TMP': 19})
                 clothes_list.append(clothes_data['clothes'])
                 msg_list.append(clothes_data['msg'])
                 if not img:
                     img = clothes_data['img']
             elif tmp <= 22:
-                clothes_data = db.clothes.find({'high_TMP': 22})
+                clothes_data = db.clothes.find_one({'high_TMP': 22})
                 clothes_list.append(clothes_data['clothes'])
                 msg_list.append(clothes_data['msg'])
                 if not img:
                     img = clothes_data['img']
             elif tmp <= 26:
-                clothes_data = db.clothes.find({'high_TMP': 26})
+                clothes_data = db.clothes.find_one({'high_TMP': 26})
                 clothes_list.append(clothes_data['clothes'])
                 msg_list.append(clothes_data['msg'])
                 if not img:
                     img = clothes_data['img']
             else:
-                clothes_data = db.clothes.find({'high_TMP': 100})
+                clothes_data = db.clothes.find_one({'high_TMP': 100})
+                print(clothes_data)
                 clothes_list.append(clothes_data['clothes'])
                 msg_list.append(clothes_data['msg'])
                 if not img:
                     img = clothes_data['img']
 
-            clothes_txt = clothes_list.join(', ')
-            msg = msg_list.join('\n')
+            clothes_txt = ', '.join(clothes_list)
+            msg = '\n'.join(msg_list)
 
         if max_TMP - min_TMP >= 10:
             msg = '일교차가 10°C 이상이에요. 감기 걸리지 않도록 두꺼운 옷 챙겨가세요!'

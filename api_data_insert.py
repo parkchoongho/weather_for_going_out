@@ -34,4 +34,4 @@ for i in range(2, 3776):
 # db.clothes.insert_one({'low_TMP': 17, 'high_TMP': 19, 'clothes': '니트&가디건, 후드티&맨투맨, 얇은 자켓, 면바지, 슬랙스', 'msg': '두꺼운 외투는 안녕!', 'img': 'r19'})
 # db.clothes.insert_one({'low_TMP': 20, 'high_TMP': 22, 'clothes': '긴팔티&후드티, 셔츠, 면바지&슬랙스, 원피스', 'msg': '얆은 옷!', 'img': 'r22'})
 # db.clothes.insert_one({'low_TMP': 23, 'high_TMP': 26, 'clothes': '얇은 긴팔, 얇은 셔츠, 반팔, 면바지&반바지', 'msg': '여름이에요! 반팔을 꺼낼 시간~', 'img': 'r27'})
-# db.clothes.insert_one({'low_TMP': 27, 'high_TMP': 100, 'clothes': '민소매, 반팔, 반바지, 린넨', 'msg': '한여름!! 최대한 얇고 시원하게!', 'img': 'r28'})
+# db.clothes.insert_one({'low_TMP': 27, 'high_TMP': 100, 'clothes': '민소매, 반팔, 반바지, 린넨', 'msg': '한여름!! 얇고 시원하게!', 'img': 'r28'})
