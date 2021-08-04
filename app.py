@@ -199,12 +199,13 @@ def main():
 
 @app.route('/update', methods=['POST'])
 def update_user():
-    userID = request.form['uesrID']
-    pw = request.form['pw']
-    pw2 = request.form['pw2']
-    area = request.form['area']
-    goingToOffice = request.form['goingToOffice']
-    goingHome = request.form['goingHome']
+    pw = request.form['pw_give']
+    pw2 = request.form['pw2_give']
+    area = request.form['area_give']
+    goingToOffice = request.form['goingToOffice_give'][0:2]
+    goingHome = request.form['goingHome_give'][0:2]
+
+    userID = session["userID"]
 
     db.users.update_one({'userID': userID}, {
                         '$set': {'pw': pw,
@@ -212,16 +213,17 @@ def update_user():
                                  'area': area,
                                  'goingToOffice': goingToOffice,
                                  'goingHome': goingHome}})
+    return jsonify({'result': 'success'})
 
 @app.route('/update', methods=['GET'])
 def get_update():
     if session_check() == False:
         return redirect(url_for('login'))
-    return render_template('join.html')
+    all_sido = db.grid.distinct("sido")
+    return render_template('update.html', all_sido=all_sido)
 
 
 @app.route('/join', methods=['GET'])
-
 def join_sido():
     if session_check():
         return redirect(url_for('main'))
