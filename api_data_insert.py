@@ -25,8 +25,7 @@ for i in range(2, 3776):
         data = ({'code': code, 'sido': sido, 'sigungu': sigungu, 'village': village, 'x': x, 'y': y})
         # print(data)
         # db.grid.insert_one(data)
-# db.clothes.insert_one({'low_TMP': -100, 'high_TMP': 5, 'clothes': '패딩, 목도리, 장갑, 기모바지', 'msg': '추운 겨울 날씨예요~ 최대한 따뜻하게 입으세요!', 'img': 'r4'})
-
+        
 # db.clothes.insert_one({'low_TMP': -100, 'high_TMP': 5, 'clothes': '패딩, 목도리, 장갑, 기모바지', 'msg': '추운 겨울 날씨예요~ 최대한 따뜻하게 입으세요!', 'img': 'r4'})
 # db.clothes.insert_one({'low_TMP': 6, 'high_TMP': 9, 'clothes': '겨울코트, 경량패딩, 가죽자켓, 발열 내의', 'msg': '쌀쌀해요~ 두꺼운 외투를 입으세요!', 'img': 'r8'})
 # db.clothes.insert_one({'low_TMP': 10, 'high_TMP': 11, 'clothes': '트렌치코트, 항공점퍼, 얇은 코트', 'msg': '겹겹이 레이어드 코디!', 'img': 'r11'})

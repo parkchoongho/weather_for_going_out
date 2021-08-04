@@ -5,13 +5,13 @@
   이 사이트는 사용자가 <b>실외에 있는 시간</b>을 기준으로 최고 기온, 최저 기온,
   우산 여부 안내 및 적절한 옷차림을 추천해주는 서비스입니다.
 </p>
-<button onclick="logout()">로그아웃</button><button>정보수정</button><br />
-<button>내일날씨</button>
-<p>최고 기온: {{ max_TMP }}°C</p>
-<p>최저 기온: {{ min_TMP }}°C</p>
-<p>우산 챙길까? {{ umbrella }}</p>
-<p>옷 추천: {{ msg }} ex) {{ clothes_txt }}</p>
-<img src = "/static/{{ img }}.jpg">
+<button onclick="logout()">로그아웃</button><button>정보 수정</button><br />
+<button onclick="tomorrow('{{ max_TMP_t }}', '{{ min_TMP_t }}', '{{ umbrella_t }}', '{{ msg_t }}', '{{ clothes_txt_t }}', '{{ img_t }}')">내일 날씨</button>
+<p id='max_TMP'>최고 기온: {{ max_TMP }}°C</p>
+<p id='min_TMP'>최저 기온: {{ min_TMP }}°C</p>
+<p id='umbrella'>우산 챙길까? {{ umbrella }}</p>
+<p id='msg'>옷 추천: {{ msg }} ex) {{ clothes_txt }}</p>
+<img id='img' src = "/static/{{ img }}.jpg">
 <script
   type="text/javascript"
   src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
@@ -35,6 +35,21 @@
         window.location.reload();
       },
     });
+  }
+
+  function tomorrow(max_TMP, min_TMP, umbrella, msg, clothes_txt, img) {
+      console.log('1111111111')
+    var max_TMP_tag = '<p>최고 기온: ' + max_TMP + '°C</p>'
+    var min_TMP_tag = '<p>최저 기온: ' + min_TMP + '°C</p>'
+    var umbrella_tag = '<p>우산 챙길까? ' + umbrella + '</p>'
+    var msg_tag = '<p>옷 추천: ' + msg + ' ex) ' + clothes_txt + '</p>'
+    var img_tag = "<img id='img' src = '/static/" + img + '.jpg">'
+
+    document.getElementById('max_TMP').innerHTML = max_TMP_tag;
+    document.getElementById('min_TMP').innerHTML = min_TMP_tag;
+    document.getElementById('umbrella').innerHTML = umbrella_tag;
+    document.getElementById('msg').innerHTML = msg_tag;
+    document.getElementById('img').innerHTML = img_tag;
   }
 </script>
 
