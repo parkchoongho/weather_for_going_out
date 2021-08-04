@@ -153,6 +153,11 @@ def login():
         return redirect(url_for('main'))
     return render_template('login.html')
 
+@app.route('/logout', methods=["GET"])
+def logout():
+    session.clear()
+    return jsonify({"result" : "success"})
+
 def session_check():
     userID = session.get('userID')
     if userID is None:
