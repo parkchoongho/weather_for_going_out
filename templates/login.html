@@ -119,6 +119,11 @@
           password: password,
         },
         success: function (response) {
+          if (response["result"] === "success") {
+            alert("로그인 되셨습니다!");
+          } else {
+            alert("로그인에 실패하셨습니다! 다시 입력해주세요!");
+          }
           window.location.reload();
         },
       });

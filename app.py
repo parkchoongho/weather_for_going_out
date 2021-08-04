@@ -146,7 +146,7 @@ def login():
         password = request.form['password']
         user = db.users.find_one({'userID' : userID, 'pw': password}, {'pw' : False})
         if user is None:
-            return redirect(url_for('login'))
+            return jsonify({"result" : "fail"})
         session['userID'] = user['userID']
         return jsonify({"result" : "success"})
     if session_check():

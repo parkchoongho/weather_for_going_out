@@ -29,7 +29,9 @@
       url: "logout",
       data: {},
       success: function (response) {
-        console.log(response);
+        if (response["result"] === "success") {
+          alert("로그아웃 되셨습니다!");
+        }
         window.location.reload();
       },
     });
