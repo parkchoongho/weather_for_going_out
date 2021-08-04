@@ -12,6 +12,8 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
 app.secret_key = 'sdkmcslkcmks'
+app.permanent_session_lifetime = timedelta(minutes=20)
+
 
 client = MongoClient('localhost', 27017)
 db = client.dbweather
@@ -25,7 +27,6 @@ def main():
     # session있는지 확인 없으면 로그인화면으로 리다이렉트
     if session_check() == False:
         return redirect(url_for('login'))
-    print(session['userId'])
     # 기상청 단기예보 조회서비스 api 데이터 url 주소
     weather_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?"
 
@@ -141,21 +142,20 @@ def post_join():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-
-        userId = request.form['user_id']
+        userID = request.form['user_id']
         password = request.form['password']
-        user = db.users.find_one({'userId' : userId, 'password': password}, {'password' : False})
+        user = db.users.find_one({'userID' : userID, 'pw': password}, {'pw' : False})
         if user is None:
             return redirect(url_for('login'))
-        session['userId'] = user['userId']
+        session['userID'] = user['userID']
         return jsonify({"result" : "success"})
     if session_check():
         return redirect(url_for('main'))
     return render_template('login.html')
 
 def session_check():
-    userId = session.get('userId')
-    if userId is None:
+    userID = session.get('userID')
+    if userID is None:
         return False
     return True
 
