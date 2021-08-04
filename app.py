@@ -84,6 +84,17 @@ def main():
     
     clothes_txt = ''
     msg = ''
+    img = ''
+    max_TMP = ''
+    min_TMP = ''
+    umbrella = ''
+    clothes_txt_t = ''
+    msg_t = ''
+    img_t = ''
+    max_TMP_t = ''
+    min_TMP_t = ''
+    umbrella_t = ''
+
     try:
         items = res.json().get('response').get('body').get('items')
         # print(items)
