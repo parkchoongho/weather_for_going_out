@@ -222,6 +222,8 @@ def get_update():
 
 @app.route('/join', methods=['GET'])
 def get_join():
+    if session_check():
+        return redirect(url_for('main'))
     return render_template('join.html')
  
 @app.route('/join', methods=['POST'])
@@ -236,9 +238,18 @@ def post_join():
     goingHome_receive = request.form['goingHome_give']
     goingHome_receive2 = goingHome_receive[0:2]
 
-    join = {'userID': userID_receive, 'pw': pw_receive, 'pw2': pw2_receive,'area': area_receive, 'goingToOffice': goingToOffice_receive2, 'goingHome': goingHome_receive2}
+    join = {
+        'userID': userID_receive, 
+        'pw': pw_receive, 
+        'pw2': pw2_receive,
+        'area': area_receive, 
+        'goingToOffice': goingToOffice_receive2, 
+        'goingHome': goingHome_receive2
+    }
 
     db.users.insert_one(join)
+
+    session['userID'] = userID_receive
 
     return jsonify({'result': 'success'})
 
