@@ -134,7 +134,7 @@ def post_join():
 
     join = {'userID': userID_receive, 'pw': pw_receive, 'pw2': pw2_receive,'area': area_receive, 'goingToOffice': goingToOffice_receive2, 'goingHome': goingHome_receive2}
 
-    db.dbweather.insert_one(join)
+    db.users.insert_one(join)
 
     return jsonify({'result': 'success'})
 
