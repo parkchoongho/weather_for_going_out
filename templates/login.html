@@ -1,5 +1,5 @@
 <!-- @format -->
-
+{% extends 'head.html' %} {% block content %}
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -20,42 +20,61 @@
 
     <!-- 구글폰트 -->
     <link
-      href="https://fonts.googleapis.com/css?family=Stylish&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
       rel="stylesheet"
     />
+    <style>
+      * {
+        font-family: "Jua", sans-serif;
+      }
 
-    <title>SW사관학교 정글 | 나홀로 메모장</title>
+      .wrap {
+        margin: auto;
+        width: 900px;
+      }
+
+      .comment {
+        font-weight: bold;
+        color: blue;
+      }
+
+      .posting-box {
+        margin: 10px auto 30px auto;
+        width: 500px;
+
+        border: 3px solid black;
+        border-radius: 5px;
+
+        padding: 25px;
+      }
+    </style>
+    <title>Weather for going out</title>
   </head>
 
   <body>
     <div class="wrap">
-      <div class="jumbotron">
-        <h1 class="display-4">
-          나홀로 메모장 <span class="badge badge-secondary">ver2.0</span>
-        </h1>
-        <div id="post-box" class="form-post">
-          <div>
-            <div class="form-group">
-              <input
-                id="post-id"
-                class="form-control"
-                placeholder="ID를 입력해주세요"
-              />
-            </div>
-            <div class="form-group">
-              <input
-                id="post-password"
-                type="password"
-                class="form-control"
-                rows="3"
-                placeholder="내용을 입력하세요"
-              />
-            </div>
-            <button type="button" class="btn btn-primary" onclick="login()">
-              로그인
-            </button>
-            <a href="/join">회원가입</a>
+      <div class="posting-box">
+        <div>
+          <div class="form-group">
+            <input
+              id="post-id"
+              class="form-control"
+              placeholder="ID를 입력해주세요"
+            />
           </div>
+          <div class="form-group">
+            <input
+              id="post-password"
+              type="password"
+              class="form-control"
+              rows="3"
+              placeholder="비밀번호를 입력하세요"
+            />
+          </div>
+          <button type="button" class="btn btn-primary" onclick="login()">
+            로그인
+          </button>
+          <a href="/join">회원가입</a>
         </div>
       </div>
       <div id="cards-box" class="card-columns"></div>
@@ -85,3 +104,4 @@
     }
   </script>
 </html>
+{% endblock %}
