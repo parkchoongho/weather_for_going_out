@@ -106,7 +106,8 @@ def main():
         state_list_t = []
 
         for item in items['item']:
-            if item['fcstTime'] in [goingToOffice, goingToOfficeEnd, goingHome, goingHomeEnd]:
+            if item['fcstDate'] == today_date and item['fcstTime'] in [goingToOffice, goingToOfficeEnd, goingHome, goingHomeEnd]: 
+
                 # 기온
                 if item['category'] == 'TMP':
                     print(goingToOffice, goingToOfficeEnd)
