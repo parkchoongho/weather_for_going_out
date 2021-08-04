@@ -1,0 +1,239 @@
+<!-- @format -->
+
+{% extends 'head.html' %} {% block content %}
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+
+    <!-- Optional JavaScript -->
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+
+    <title>Weather for going out</title>
+
+    <!-- 구글폰트 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Jua", sans-serif;
+      }
+
+      .wrap {
+        margin: auto;
+        width: 900px;
+      }
+
+      .comment {
+        font-weight: bold;
+        color: blue;
+      }
+
+      .posting-box {
+        margin: 10px auto 30px auto;
+        width: 500px;
+
+        border: 3px solid black;
+        border-radius: 5px;
+
+        padding: 25px;
+      }
+    </style>
+    <script>
+      function postjoin() {
+        let userID = $("#userID").val();
+        let pw = $("#pw").val();
+        let pw2 = $("#pw2").val();
+        let area = $("#all_village").val(); // 주소 중 '동'만 area로 받음.
+        let goingToOffice = $("#goingToOffice").val();
+        let goingHome = $("#goingHome").val();
+        let all_sido = $("#all_sido").val();
+        let all_sigungu = $("#all_sigungu").val();
+        // console.log(typeof userID)
+        // console.log(pw)
+        // console.log(area)
+        if (pw != pw2){
+            alert("두 비밀번호가 일치하지 않습니다.");
+            return;
+        }
+        if (userID == "" || pw == "" || pw2 == "" || area == null || goingToOffice == "" || goingHome == ""){
+            alert("모든 입력사항을 채워주세요!")
+            return}
+
+
+        // 2. join에 POST 방식으로 생성 요청하기
+        $.ajax({
+            type: "POST", // POST 방식으로 요청하겠다.
+            url: "/join", // /join이라는 url에 요청하겠다.
+            data: {
+                userID_give: userID,
+                pw_give: pw,
+                sido_give: all_sido,
+                sigungu_give: all_sigungu,
+                area_give: area,
+                goingToOffice_give: goingToOffice,
+                goingHome_give: goingHome}, // 데이터를 주는 방법
+            success: function(response) { // 성공하면
+                if (response["result"] == "success") {
+                    alert("회원가입 성공!");
+                    // 3. 성공 시 페이지 새로고침하기
+                    window.location.reload();
+                // } else if (response["result"] == "ID 중복") {
+                //     alert("ID 중복!")
+                } else {
+                    alert("회원가입 실패!")
+                }
+            }
+        })
+    } 
+
+function check_pw() {
+
+        if(document.getElementById('pw').value==document.getElementById('pw2').value){
+            document.getElementById('pwCheck').innerHTML='비밀번호가 일치합니다.'
+            document.getElementById('pwCheck').style.color='blue';
+        }
+        else{
+            document.getElementById('pwCheck').innerHTML='비밀번호가 일치하지 않습니다.';
+            document.getElementById('pwCheck').style.color='red';
+        }
+        }
+
+    function sidoChange(e) {
+        console.log(e.value)
+
+        $.ajax({
+            type: "GET",
+            url: `join_sigungu?sido_give=${e.value}`, // GET은 data가 아니라 url로 받아야함, javascript 문장열 안 변수 넣을 때 백틱+${}이용
+            data: {},
+            success: function(response){
+                console.log(response)
+                var target = document.getElementById("all_sigungu");
+                var target2 = document.getElementById("all_village");
+                target.options.length = 0; // dropdown항목 처음 초기화
+                target2.options.length = 0; // dropdown항목 처음 초기화
+                var opt = document.createElement("option");
+                opt.value = 'none';
+                opt.innerHTML = '===== 선택 =====';
+                target.appendChild(opt); // 추가
+                var opt = document.createElement("option");
+                opt.value = 'none';
+                opt.innerHTML = '===== 선택 =====';
+                target2.appendChild(opt);
+                for (x in response['all_sigungu']) {
+                var opt = document.createElement("option");
+                opt.value = response['all_sigungu'][x];
+                opt.innerHTML = response['all_sigungu'][x]; // 실제 dropdown에 표시되는 값
+                target.appendChild(opt); // 추가
+                } 
+            }
+        }) 
+    }
+    
+    function sigunguChange(e) {
+        console.log(e.value)
+
+        $.ajax({
+            type: "GET",
+            url: `join_village?sigungu_give=${e.value}`,
+            data: {},
+            success: function(response){
+                console.log(response)
+                var target = document.getElementById("all_village");
+            
+                target.options.length = 0;
+                var opt = document.createElement("option");
+                opt.value = 'none';
+                opt.innerHTML = '===== 선택 =====';
+                target.appendChild(opt);
+                for (x in response['all_village']) {
+                var opt = document.createElement("option");
+                opt.value = response['all_village'][x];
+                opt.innerHTML = response['all_village'][x];
+                target.appendChild(opt);
+                } 
+            }
+        }) 
+    }
+    </script>
+  </head>
+
+  <body>
+    <div class="wrap">
+        <div class="posting-box">
+            <div class="form-group">
+                <label for="exampleInputEmail1">ID</label>
+                <input id="userID" type="email" class="form-control" placeholder="">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">PW</label>
+                <input id="pw" type="password" class="form-control" placeholder="" onchange="check_pw(this)">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword2">PW 확인</label>
+                <input id="pw2" type="password" class="form-control" placeholder="" onchange="check_pw(this)">
+            </div>
+            <div><span id="pwCheck"></span></div>
+            <label>시도</label><br>
+            <select id="all_sido" name= sido method="GET" action="/" onchange="sidoChange(this)">
+                <option value="none" selected>===== 선택 =====</option>
+                {% for sido in all_sido %}
+                <option value= "{{sido}}">{{sido}}</option>
+                {% endfor %}
+            </select> <br><br>
+            
+            <label>시군구</label><br>
+            <select id="all_sigungu" name=sigungu method="GET" action="/" onchange="sigunguChange(this)">
+                <option value= "none" SELECTED>===== 선택 =====</option>
+                {% for sigungu in all_sigungu %}
+                <option value= "{{sigungu}}">{{sigungu}}</option>
+                {% endfor %}
+            </select> <br><br>
+
+            <label>읍면동</label><br>
+            <select id="all_village" name=village method="GET" action="/">
+                <option value= "none" SELECTED>===== 선택 =====</option>
+                {% for village in all_village %}
+                <option value= "{{village}}">{{village}}</option>
+                {% endfor %}
+            </select> <br><br>
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">출근 시간</label>
+                <p><input id="goingToOffice" type="time" placeholder=""></p>
+            </div>
+            <div class="form-group">
+                <label>퇴근 시간</label>
+                <p><input id="goingHome" type="time"></p>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="postjoin()">회원 등록</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+{% endblock %}

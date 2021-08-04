@@ -1,1 +1,32 @@
-<h1>Weather for going out</h1>
+<!-- @format -->
+
+<style>
+  #sun_logo {
+    display: inline-block;
+    margin: 15px;
+    height: 30px;
+    width: auto;
+    border-radius: 50%;
+  }
+  h1 {
+    text-align: center;
+  }
+  a:link {
+    color: black;
+    text-decoration: none;
+  }
+  a:visited {
+    color: black;
+    text-decoration: none;
+  }
+  a:hover {
+    color: #006dd7;
+    text-decoration: underline;
+  }
+</style>
+<a href="/"
+  ><h1>
+    Weather for going out <img id="sun_logo" src="/static/sun_logo.png" /></h1
+></a>
+
+{% block content %}{% endblock %}
