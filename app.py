@@ -367,7 +367,10 @@ def post_join():
     goingHome_receive2 = goingHome_receive[0:2]
 
     userCheck = list(db.users.find({"userID":userID_receive}))
-    print(userCheck)
+    
+    print(userCheck['userID'])
+    prtin('hi')
+
 
     join = {
         'userID': userID_receive, 
