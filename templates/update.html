@@ -138,6 +138,10 @@
             var target = document.getElementById("all_sigungu");
 
             target.options.length = 0; // dropdown항목 처음 초기화
+            var opt = document.createElement("option");
+            opt.value = 'none';
+            opt.innerHTML = '===== 선택 =====';
+            target.appendChild(opt); // 추가
             for (x in response["all_sigungu"]) {
               var opt = document.createElement("option");
               opt.value = response["all_sigungu"][x];
@@ -160,6 +164,10 @@
             var target = document.getElementById("all_village");
 
             target.options.length = 0;
+            var opt = document.createElement("option");
+            opt.value = 'none';
+            opt.innerHTML = '===== 선택 =====';
+            target.appendChild(opt); // 추가
             for (x in response["all_village"]) {
               var opt = document.createElement("option");
               opt.value = response["all_village"][x];
@@ -169,10 +177,66 @@
           },
         });
       }
+
+      function init() {
+        const e = $("#all_sido option:selected").val()
+        const e_sigungu = $("#all_sigungu option:selected").val()
+        const e_village = $("#all_village option:selected").val()
+        console.log(e_sigungu)
+        $.ajax({
+          type: "GET",
+          url: 'join_sigungu?sido_give=' + e, // GET은 data가 아니라 url로 받아야함, javascript 문장열 안 변수 넣을 때 백틱+${}이용
+          data: {},
+          success: function (response) {
+            console.log(response);
+            var target = document.getElementById("all_sigungu");
+
+            target.options.length = 0; // dropdown항목 처음 초기화
+            var opt = document.createElement("option");
+            opt.value = 'none';
+            opt.innerHTML = '===== 선택 =====';
+            target.appendChild(opt); // 추가
+            for (x in response["all_sigungu"]) {
+              var opt = document.createElement("option");
+              opt.value = response["all_sigungu"][x];
+              console.log(x);
+              opt.innerHTML = response["all_sigungu"][x]; // 실제 dropdown에 표시되는 값
+              if (response["all_sigungu"][x] == e_sigungu) {
+                opt.setAttribute('selected', 'selected');
+              };
+              target.appendChild(opt); // 추가
+            }
+          },
+        });
+        $.ajax({
+          type: "GET",
+          url: 'join_village?sigungu_give=' + e_sigungu,
+          data: {},
+          success: function (response) {
+            console.log(response);
+            var target = document.getElementById("all_village");
+
+            target.options.length = 0;
+            var opt = document.createElement("option");
+            opt.value = 'none';
+            opt.innerHTML = '===== 선택 =====';
+            target.appendChild(opt); // 추가
+            for (x in response["all_village"]) {
+              var opt = document.createElement("option");
+              opt.value = response["all_village"][x];
+              opt.innerHTML = response["all_village"][x];
+              if (response["all_village"][x] == e_village) {
+                opt.setAttribute('selected', 'selected');
+              };
+              target.appendChild(opt);
+            }
+          },
+        });
+      }
     </script>
   </head>
 
-  <body>
+  <body onload="init();">
     <div class="wrap">
       <div class="posting-box">
         <div class="form-group">
@@ -187,9 +251,14 @@
         </div>
         <div><span id="pwCheck"></span></div>
         <label>시도</label><br />
-        <select name="sido" method="GET" action="/" onchange="sidoChange(this)">
+        <select id="all_sido" name="sido" method="GET" action="/" onchange="sidoChange(this)">
+          <option value="none">===== 선택 =====</option>
           {% for sido in all_sido %}
-          <option value="{{sido}}">{{sido}}</option>
+            {% if sido == user['sido'] %}
+              <option value="{{sido}}" selected>{{sido}}</option>
+            {% else %}
+              <option value="{{sido}}">{{sido}}</option>
+            {% endif %}
           {% endfor %}
         </select>
         <br /><br />
@@ -202,8 +271,13 @@
           action="/"
           onchange="sigunguChange(this)"
         >
+        <option value="{{user['sigungu']}}" selected>{{user['sigungu']}}</option>
           {% for sigungu in all_sigungu %}
-          <option value="{{sigungu}}" selected>{{sigungu}}</option>
+            {% if sido == user['sigungu'] %}
+              <option value="{{sigungu}}" selected>{{sigungu}}</option>
+            {% else %}
+              <option value="{{sigungu}}">{{sigungu}}</option>
+            {% endif %}
           {% endfor %}
         </select>
         <br /><br />

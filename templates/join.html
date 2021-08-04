@@ -132,8 +132,17 @@ function check_pw() {
             success: function(response){
                 console.log(response)
                 var target = document.getElementById("all_sigungu");
-            
+                var target2 = document.getElementById("all_village");
                 target.options.length = 0; // dropdown항목 처음 초기화
+                target2.options.length = 0; // dropdown항목 처음 초기화
+                var opt = document.createElement("option");
+                opt.value = 'none';
+                opt.innerHTML = '===== 선택 =====';
+                target.appendChild(opt); // 추가
+                var opt = document.createElement("option");
+                opt.value = 'none';
+                opt.innerHTML = '===== 선택 =====';
+                target2.appendChild(opt);
                 for (x in response['all_sigungu']) {
                 var opt = document.createElement("option");
                 opt.value = response['all_sigungu'][x];
@@ -156,6 +165,10 @@ function check_pw() {
                 var target = document.getElementById("all_village");
             
                 target.options.length = 0;
+                var opt = document.createElement("option");
+                opt.value = 'none';
+                opt.innerHTML = '===== 선택 =====';
+                target.appendChild(opt);
                 for (x in response['all_village']) {
                 var opt = document.createElement("option");
                 opt.value = response['all_village'][x];
@@ -186,22 +199,25 @@ function check_pw() {
             <div><span id="pwCheck"></span></div>
             <label>시도</label><br>
             <select id="all_sido" name= sido method="GET" action="/" onchange="sidoChange(this)">
+                <option value="none" selected>===== 선택 =====</option>
                 {% for sido in all_sido %}
-                <option value= "{{sido}}" SELECTED>{{sido}}</option>
+                <option value= "{{sido}}">{{sido}}</option>
                 {% endfor %}
             </select> <br><br>
             
             <label>시군구</label><br>
             <select id="all_sigungu" name=sigungu method="GET" action="/" onchange="sigunguChange(this)">
+                <option value= "none" SELECTED>===== 선택 =====</option>
                 {% for sigungu in all_sigungu %}
-                <option value= "{{sigungu}}" SELECTED>{{sigungu}}</option>
+                <option value= "{{sigungu}}">{{sigungu}}</option>
                 {% endfor %}
             </select> <br><br>
 
             <label>읍면동</label><br>
             <select id="all_village" name=village method="GET" action="/">
+                <option value= "none" SELECTED>===== 선택 =====</option>
                 {% for village in all_village %}
-                <option value= "{{village}}" SELECTED>{{village}}</option>
+                <option value= "{{village}}">{{village}}</option>
                 {% endfor %}
             </select> <br><br>
 
