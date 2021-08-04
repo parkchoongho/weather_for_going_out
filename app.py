@@ -316,25 +316,58 @@ def update_user():
                                  'goingToOffice': goingToOffice,
                                  'goingHome': goingHome}})
 
-@app.route('/join', methods=['GET'])
-def get_join():
+@app.route('/update', methods=['GET'])
+def get_update():
+    if session_check() == False:
+        return redirect(url_for('login'))
     return render_template('join.html')
- 
+
+
+@app.route('/join', methods=['GET'])
+
+def join_sido():
+    if session_check():
+        return redirect(url_for('main'))
+    all_sido = db.grid.distinct("sido")
+    return render_template('join.html', all_sido=all_sido)
+
+@app.route('/join_sigungu', methods=['GET']) # 시도 dropdown 값 받음
+def join_sigungu():
+    sido_receive = request.args.get('sido_give') # 정해진 시도 값 받기
+    all_sigungu = db.grid.distinct("sigungu",filter={'sido':sido_receive}) # 정해진 시도의 시군구 값 다 받기
+
+    return jsonify({'result': 'success', 'all_sigungu': all_sigungu})
+
+@app.route('/join_village', methods=['GET']) # 시군구 dropdown 값 받음
+def join_village():
+    sigungu_receive = request.args.get('sigungu_give') # 정해진 시군구 값 받기
+    all_village = db.grid.distinct("village",filter={'sigungu':sigungu_receive}) # 정해진 시도의 시군구 값 다 받기
+
+    return jsonify({'result': 'success', 'all_village': all_village})
+
 @app.route('/join', methods=['POST'])
 def post_join():
-    # 1. 클라이언트로부터 데이터를 받기
-    userID_receive = request.form['userID_give']  # 클라이언트로부터 url을 받는 부분
-    pw_receive = request.form['pw_give']  # 클라이언트로부터 comment를 받는 부분
-    pw2_receive = request.form['pw2_give']  # 클라이언트로부터 comment를 받는 부분
-    area_receive = request.form['area_give']  # 클라이언트로부터 comment를 받는 부분
+    userID_receive = request.form['userID_give'] 
+    pw_receive = request.form['pw_give'] 
+    pw2_receive = request.form['pw2_give']
+    area_receive = request.form['area_give'] # 동 만 받음
     goingToOffice_receive = request.form['goingToOffice_give']
     goingToOffice_receive2 = goingToOffice_receive[0:2]
     goingHome_receive = request.form['goingHome_give']
     goingHome_receive2 = goingHome_receive[0:2]
 
-    join = {'userID': userID_receive, 'pw': pw_receive, 'pw2': pw2_receive,'area': area_receive, 'goingToOffice': goingToOffice_receive2, 'goingHome': goingHome_receive2}
+    join = {
+        'userID': userID_receive, 
+        'pw': pw_receive, 
+        'pw2': pw2_receive,
+        'area': area_receive, 
+        'goingToOffice': goingToOffice_receive2, 
+        'goingHome': goingHome_receive2
+    }
 
     db.users.insert_one(join)
+
+    session['userID'] = userID_receive
 
     return jsonify({'result': 'success'})
 

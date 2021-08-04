@@ -5,7 +5,7 @@
   이 사이트는 사용자가 <b>실외에 있는 시간</b>을 기준으로 최고 기온, 최저 기온,
   우산 여부 안내 및 적절한 옷차림을 추천해주는 서비스입니다.
 </p>
-<button onclick="logout()">로그아웃</button><button>정보 수정</button><br />
+<button onclick="logout()">로그아웃</button><a href="/update"><button>정보수정</button></a><br />
 <button onclick="tomorrow('{{ max_TMP_t }}', '{{ min_TMP_t }}', '{{ umbrella_t }}', '{{ msg_t }}', '{{ clothes_txt_t }}', '{{ img_t }}')">내일 날씨</button>
 <p id='max_TMP'>최고 기온: {{ max_TMP }}°C</p>
 <p id='min_TMP'>최저 기온: {{ min_TMP }}°C</p>
