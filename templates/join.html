@@ -69,6 +69,8 @@
         let area = $("#all_village").val(); // 주소 중 '동'만 area로 받음.
         let goingToOffice = $("#goingToOffice").val();
         let goingHome = $("#goingHome").val();
+        let all_sido = $("#all_sido").val();
+        let all_sigungu = $("#all_sigungu").val();
         // console.log(typeof userID)
         // console.log(pw)
         // console.log(area)
@@ -89,6 +91,8 @@
                 userID_give: userID,
                 pw_give: pw,
                 pw2_give: pw2,
+                sido_give: all_sido,
+                sigungu_give: all_sigungu,
                 area_give: area,
                 goingToOffice_give: goingToOffice,
                 goingHome_give: goingHome}, // 데이터를 주는 방법
@@ -181,7 +185,7 @@ function check_pw() {
             </div>
             <div><span id="pwCheck"></span></div>
             <label>시도</label><br>
-            <select name= sido method="GET" action="/" onchange="sidoChange(this)">
+            <select id="all_sido" name= sido method="GET" action="/" onchange="sidoChange(this)">
                 {% for sido in all_sido %}
                 <option value= "{{sido}}" SELECTED>{{sido}}</option>
                 {% endfor %}

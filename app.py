@@ -380,6 +380,8 @@ def post_join():
     userID_receive = request.form['userID_give'] 
     pw_receive = request.form['pw_give'] 
     pw2_receive = request.form['pw2_give']
+    sido_receive = request.form['sido_give']
+    sigungu_receive = request.form['sigungu_give']
     area_receive = request.form['area_give'] # 동 만 받음
     goingToOffice_receive = request.form['goingToOffice_give']
     goingToOffice_receive2 = goingToOffice_receive[0:2]
@@ -400,6 +402,8 @@ def post_join():
         'userID': userID_receive, 
         'pw': pw_receive, 
         'pw2': pw2_receive,
+        'sido': sido_receive,
+        'sigungu': sigungu_receive,
         'area': area_receive, 
         'goingToOffice': goingToOffice_receive2,
         'goingToOfficeT': goingToOffice_receive,
