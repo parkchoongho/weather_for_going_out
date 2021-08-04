@@ -101,12 +101,10 @@ def main():
         weather_data = dict()
         tmp_list = []
         state_list = []
-<<<<<<< HEAD
-=======
+
         tmp_list_t = []
         state_list_t = []
 
->>>>>>> update
         for item in items['item']:
             if item['fcstTime'] in [goingToOffice, goingToOfficeEnd, goingHome, goingHomeEnd]:
                 # 기온
@@ -131,8 +129,7 @@ def main():
                 
                     weather_data['code'] = weather_code
                     state_list.append(weather_state)
-<<<<<<< HEAD
-=======
+
 
 
             elif item['fcstDate'] == tomorrow_date and item['fcstTime'] in [goingToOffice, goingToOfficeEnd, goingHome, goingHomeEnd]:
@@ -155,20 +152,16 @@ def main():
                     weather_data['code'] = weather_code
                     state_list_t.append(weather_state)
 
->>>>>>> update
         print(tmp_list)
         print(state_list)
 
         max_TMP = max(tmp_list)
         min_TMP = min(tmp_list)
         umbrella = '날씨가 좋네요 :)'
-<<<<<<< HEAD
-=======
         max_TMP_t = max(tmp_list_t)
         min_TMP_t = min(tmp_list_t)
         umbrella_t = '날씨가 좋네요 :)'
 
->>>>>>> update
         for state in state_list:
             if state == '비':
                 umbrella = '비가 와요. 우산을 꼭 챙겨주세요!'
@@ -178,8 +171,6 @@ def main():
                 umbrella = '눈이 와요. 우산을 꼭 챙기세요! 장갑도요!'
             elif state == '소나기':
                 umbrella = '소나기가 와요. 우산을 꼭 챙겨주세요!'
-<<<<<<< HEAD
-=======
         for state in state_list_t:
             if state == '비':
                 umbrella_t = '비가 와요. 우산을 꼭 챙겨주세요!'
@@ -190,7 +181,6 @@ def main():
             elif state == '소나기':
                 umbrella_t = '소나기가 와요. 우산을 꼭 챙겨주세요!'
 
->>>>>>> update
         
         for tmp in tmp_list:
             clothes_list = []
@@ -248,10 +238,6 @@ def main():
             clothes_txt = ', '.join(clothes_list)
             msg = '\n'.join(msg_list)
 
-<<<<<<< HEAD
-        if max_TMP - min_TMP >= 10:
-            msg = '일교차가 10°C 이상이에요. 감기 걸리지 않도록 두꺼운 옷 챙겨가세요!'
-=======
 
         for tmp in tmp_list_t:
             clothes_list = []
@@ -314,7 +300,6 @@ def main():
             
         if max_TMP_t - min_TMP_t >= 10:
             msg_t = '일교차가 10°C 이상이에요. 감기 걸리지 않도록 두꺼운 옷 챙겨가세요!'
->>>>>>> update
 
     except Exception as ex:
         print('서버 점검 시간입니다. ', ex)
