@@ -312,20 +312,25 @@ def main():
 
 @app.route('/update', methods=['POST'])
 def update_user():
-    pw = request.form['pw_give']
-    pw2 = request.form['pw2_give']
-    area = request.form['area_give']
-    goingToOffice = request.form['goingToOffice_give'][0:2]
-    goingHome = request.form['goingHome_give'][0:2]
+    sido_receive = request.form['sido_give']
+    sigungu_receive = request.form['sigungu_give']
+    area_receive = request.form['area_give'] # 동 만 받음
+    goingToOffice_receive = request.form['goingToOffice_give']
+    goingToOffice_receive2 = goingToOffice_receive[0:2]
+    goingHome_receive = request.form['goingHome_give']
+    goingHome_receive2 = goingHome_receive[0:2]
 
     userID = session["userID"]
 
     db.users.update_one({'userID': userID}, {
-                        '$set': {'pw': pw,
-                                 'pw2': pw2,
-                                 'area': area,
-                                 'goingToOffice': goingToOffice,
-                                 'goingHome': goingHome}})
+                        '$set': {
+                            'sido': sido_receive,
+                            'sigungu': sigungu_receive,
+                            'area': area_receive,
+                            'goingToOffice': goingToOffice_receive2,
+                            'goingToOfficeT': goingToOffice_receive,
+                            'goingHome': goingHome_receive2,
+                            'goingHomeT': goingHome_receive}})
     return jsonify({'result': 'success'})
 
 @app.route('/update', methods=['GET'])

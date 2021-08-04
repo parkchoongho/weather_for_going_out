@@ -63,15 +63,15 @@
     </style>
     <script>
       function postupdate() {
-        let pw = $("#pw").val();
-        let pw2 = $("#pw2").val();
+        let all_sido = $("#all_sido").val();
+        let all_sigungu = $("#all_sigungu").val();
         let area = $("#all_village").val(); // 주소 중 '동'만 area로 받음.
         let goingToOffice = $("#goingToOffice").val();
         let goingHome = $("#goingHome").val();
 
         if (
-          pw === "" ||
-          pw2 === "" ||
+          all_sido === null ||
+          all_sigungu === null ||
           area === null ||
           goingToOffice === "" ||
           goingHome === ""
@@ -81,18 +81,13 @@
           return;
         }
 
-        if (pw != pw2) {
-          alert("두 비밀번호가 일치하지 않습니다.");
-          return;
-        }
-
         // 2. join에 POST 방식으로 생성 요청하기
         $.ajax({
           type: "POST", // POST 방식으로 요청하겠다.
           url: "/update", // /join이라는 url에 요청하겠다.
           data: {
-            pw_give: pw,
-            pw2_give: pw2,
+            sido_give: all_sido,
+            sigungu_give: all_sigungu,
             area_give: area,
             goingToOffice_give: goingToOffice,
             goingHome_give: goingHome,
@@ -187,7 +182,13 @@
         </div>
         <div><span id="pwCheck"></span></div>
         <label>시도</label><br />
-        <select name="sido" method="GET" action="/" onchange="sidoChange(this)">
+        <select
+          id="all_sido"
+          name="sido"
+          method="GET"
+          action="/"
+          onchange="sidoChange(this)"
+        >
           {% for sido in all_sido %}
           <option value="{{sido}}">{{sido}}</option>
           {% endfor %}
