@@ -27,7 +27,7 @@ def main():
     # session있는지 확인 없으면 로그인화면으로 리다이렉트
     if session_check() == False:
         return redirect(url_for('login'))
-
+    print(session['userId'])
     # 기상청 단기예보 조회서비스 api 데이터 url 주소
     weather_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?"
 
@@ -49,34 +49,10 @@ def main():
     tomorrow_date = tomorrow.strftime('%Y%m%d')
 
     # 하루에 8번 데이터 업데이트 됨. (0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300)
-    # api를 가져오려는 시점의 이전 발표시각에 업데이트된 데이터를 base_time, base_date로 설정
-    if now.hour < 2 or (now.hour == 2 and now.minute <= 10): # 0시~2시 10분
-        base_date = yesterday_date  # 발표날짜가 어제
-        base_time = "2300"
-    elif now.hour < 5 or (now.hour == 5 and now.minute <= 10):  # 2시 11분~5시 10분
-        base_date = today_date
-        base_time = "0200"
-    elif now.hour < 8 or (now.hour == 8 and now.minute <= 10):  # 5시 11분~8시 10분
-        base_date = today_date
-        base_time = "0500"
-    elif now.hour < 11 or (now.hour == 11 and now.minute <= 10):  # 8시 11분~11시 10분
-        base_date = today_date
-        base_time = "0800"
-    elif now.hour < 14 or (now.hour == 14 and now.minute <= 10):  # 11시 11분~14시 10분
-        base_date = today_date
-        base_time = "1100"
-    elif now.hour < 17 or (now.hour == 17 and now.minute <= 10):  # 14시 11분~17시 10분
-        base_date = today_date
-        base_time = "1400"
-    elif now.hour < 20 or (now.hour == 20 and now.minute <= 10):  # 17시 11분~20시 10분
-        base_date = today_date
-        base_time = "1700" 
-    elif now.hour < 23 or (now.hour == 23 and now.minute <= 10):  # 20시 11분~23시 10분
-        base_date = today_date
-        base_time = "2000"
-    else:  # 23시 11분 ~ 23시 59분
-        base_date = today_date
-        base_time = "2300"
+    # api를 가져오려는 시점의 이전 발표시각에 업데이트된 데이터를 base_time, base_date로 설정 -> 취소
+    # 기본값: api를 가져오는 날짜의 전날 23시에 발표된 데이터를 base_time, base_date로 설정
+    base_date = yesterday_date
+    base_time = "2300"
 
     # 날짜, 예보시각, 위경도 정보 받아오는 변수로 수정해야 함.
     payload = "serviceKey=" + service_key + "&" +\
@@ -91,9 +67,36 @@ def main():
     print(payload)
     
     res = requests.get(weather_url + payload)
-    items = res.json().get('response').get('body').get('items')
-    # print(items)
 
+    try:
+        items = res.json().get('response').get('body').get('items')
+        print(items)
+        weather_data = dict()
+        for item in items['item']:
+            # 기온
+            if item['category'] == 'TMP':
+                weather_data['tmp'] = item['fcstValue']
+
+            # 기상상태
+            if item['category'] == 'PTY':
+                weather_code = item['fcstValue']
+
+                if weather_code == '1':
+                    weather_state = '비'
+                elif weather_code == '2':
+                    weather_state = '비/눈'
+                elif weather_code == '3':
+                    weather_state = '눈'
+                elif weather_code == '4':
+                    weather_state = '소나기'
+                else:
+                    weather_state = '없음'
+            
+                weather_data['code'] = weather_code
+                weather_data['state'] = weather_state
+    except:
+        print('서버 점검 시간입니다.')
+    
     
 
     return render_template('index.html')
