@@ -94,6 +94,7 @@ def main():
     max_TMP_t = ''
     min_TMP_t = ''
     umbrella_t = ''
+    
     try:
         items = res.json().get('response').get('body').get('items')
         # print(items)
