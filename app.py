@@ -213,8 +213,18 @@ def update_user():
                                  'goingToOffice': goingToOffice,
                                  'goingHome': goingHome}})
 
+@app.route('/update', methods=['GET'])
+def get_update():
+    if session_check() == False:
+        return redirect(url_for('login'))
+    return render_template('join.html')
+
+
 @app.route('/join', methods=['GET'])
+
 def join_sido():
+    if session_check():
+        return redirect(url_for('main'))
     all_sido = db.grid.distinct("sido")
     return render_template('join.html', all_sido=all_sido)
 
@@ -243,9 +253,18 @@ def post_join():
     goingHome_receive = request.form['goingHome_give']
     goingHome_receive2 = goingHome_receive[0:2]
 
-    join = {'userID': userID_receive, 'pw': pw_receive, 'pw2': pw2_receive,'area': area_receive, 'goingToOffice': goingToOffice_receive2, 'goingHome': goingHome_receive2}
+    join = {
+        'userID': userID_receive, 
+        'pw': pw_receive, 
+        'pw2': pw2_receive,
+        'area': area_receive, 
+        'goingToOffice': goingToOffice_receive2, 
+        'goingHome': goingHome_receive2
+    }
 
     db.users.insert_one(join)
+
+    session['userID'] = userID_receive
 
     return jsonify({'result': 'success'})
 
