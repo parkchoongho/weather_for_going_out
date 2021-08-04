@@ -345,13 +345,20 @@ def get_updatepw():
 @app.route('/updatepw', methods=['POST'])
 def update_userpw():
     pw = request.form['pw_give']
-    pw2 = request.form['pw2_give']
+    pw3 = request.form['pw3_give']
 
     userID = session["userID"]
 
-    db.users.update_one({'userID': userID}, {
-                        '$set': {'pw': pw,
-                                 'pw2': pw2}})
+    user = db.users.find_one({'userID' : userID})
+
+    is_right_password = bcrypt.check_password_hash(user['pw'], pw)
+
+    if is_right_password == False:
+        return jsonify({'result' : 'false'})
+
+    pw_hash = bcrypt.generate_password_hash(pw3)
+
+    db.users.update_one({'userID': userID}, {'$set': {'pw': pw_hash}})
     return jsonify({'result': 'success'})
 
 @app.route('/join', methods=['GET'])
@@ -379,7 +386,6 @@ def join_village():
 def post_join():
     userID_receive = request.form['userID_give'] 
     pw_receive = request.form['pw_give'] 
-    pw2_receive = request.form['pw2_give']
     sido_receive = request.form['sido_give']
     sigungu_receive = request.form['sigungu_give']
     area_receive = request.form['area_give'] # 동 만 받음
@@ -396,12 +402,11 @@ def post_join():
         return jsonify({'result': 'ID 중복'})
     print('hi')
 
-
+    pw_hash = bcrypt.generate_password_hash(pw_receive)
 
     join = {
         'userID': userID_receive, 
-        'pw': pw_receive, 
-        'pw2': pw2_receive,
+        'pw': pw_hash, 
         'sido': sido_receive,
         'sigungu': sigungu_receive,
         'area': area_receive, 
@@ -422,8 +427,11 @@ def login():
     if request.method == "POST":
         userID = request.form['user_id']
         password = request.form['password']
-        user = db.users.find_one({'userID' : userID, 'pw': password}, {'pw' : False})
+        user = db.users.find_one({'userID' : userID})
         if user is None:
+            return jsonify({"result" : "fail"})
+        is_right_password = bcrypt.check_password_hash(user['pw'], password)
+        if is_right_password == False:
             return jsonify({"result" : "fail"})
         session['userID'] = user['userID']
         return jsonify({"result" : "success"})

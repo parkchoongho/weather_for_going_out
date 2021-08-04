@@ -64,15 +64,10 @@
     <script>
       function postupdate() {
         let pw = $("#pw").val();
-        let pw2 = $("#pw2").val();
+        let pw3 = $("#pw3").val();
 
-        if (pw === "" || pw2 === "") {
+        if (pw === "" || pw3 === "") {
           alert("입력하지 않은 필드가 있습니다.");
-          return;
-        }
-
-        if (pw != pw2) {
-          alert("두 비밀번호가 일치하지 않습니다.");
           return;
         }
 
@@ -81,7 +76,7 @@
           url: "/updatepw",
           data: {
             pw_give: pw,
-            pw2_give: pw2,
+            pw3_give: pw3,
           }, // 데이터를 주는 방법
           success: function (response) {
             // 성공하면
@@ -95,21 +90,6 @@
             }
           },
         });
-      }
-
-      function check_pw() {
-        if (
-          document.getElementById("pw").value ==
-          document.getElementById("pw2").value
-        ) {
-          document.getElementById("pwCheck").innerHTML =
-            "비밀번호가 일치합니다.";
-          document.getElementById("pwCheck").style.color = "blue";
-        } else {
-          document.getElementById("pwCheck").innerHTML =
-            "비밀번호가 일치하지 않습니다.";
-          document.getElementById("pwCheck").style.color = "red";
-        }
       }
     </script>
   </head>
@@ -128,27 +108,14 @@
           />
         </div>
         <div class="form-group">
-          <label for="exampleInputPassword1">PW</label>
-          <input
-            id="pw"
-            type="password"
-            class="form-control"
-            placeholder=""
-            onchange="check_pw(this)"
-          />
+          <label for="exampleInputPassword1">기존 비밀번호</label>
+          <input id="pw" type="password" class="form-control" placeholder="" />
         </div>
         <div class="form-group">
-          <label for="exampleInputPassword2">PW 확인</label>
-          <input
-            id="pw2"
-            type="password"
-            class="form-control"
-            placeholder=""
-            onchange="check_pw(this)"
-          />
+          <label for="exampleInputPassword2">새 비밀번호</label>
+          <input id="pw3" type="password" class="form-control" placeholder="" />
         </div>
-        <div><span id="pwCheck"></span></div>
-        
+
         <button type="button" class="btn btn-primary" onclick="postupdate()">
           비밀번호 수정
         </button>
