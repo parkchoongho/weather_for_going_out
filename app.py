@@ -12,6 +12,8 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
 app.secret_key = 'sdkmcslkcmks'
+app.permanent_session_lifetime = timedelta(minutes=20)
+
 
 client = MongoClient('localhost', 27017)
 db = client.dbweather
@@ -26,6 +28,21 @@ def main():
     if session_check() == False:
         return redirect(url_for('login'))
 
+    # 사용자 정보
+    userID = session['userID']
+    userData = db.users.find_one({'userID': userID})
+    area = userData['area']
+    goingToOffice = userData['goingToOffice'] + '00'
+    goingToOfficeEnd = str(int(goingToOffice) + 100)
+    goingHome = userData['goingHome'] + '00'
+    goingHomeEnd = str(int(goingHome) + 100)
+    print(goingToOffice)
+
+    # 동네 위경도
+    village_data = db.grid.find_one({'village': area})
+    x = village_data['x']
+    y = village_data['y']
+    
     # 기상청 단기예보 조회서비스 api 데이터 url 주소
     weather_url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?"
 
@@ -47,54 +64,137 @@ def main():
     tomorrow_date = tomorrow.strftime('%Y%m%d')
 
     # 하루에 8번 데이터 업데이트 됨. (0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300)
-    # api를 가져오려는 시점의 이전 발표시각에 업데이트된 데이터를 base_time, base_date로 설정
-    if now.hour < 2 or (now.hour == 2 and now.minute <= 10): # 0시~2시 10분
-        base_date = yesterday_date  # 발표날짜가 어제
-        base_time = "2300"
-    elif now.hour < 5 or (now.hour == 5 and now.minute <= 10):  # 2시 11분~5시 10분
-        base_date = today_date
-        base_time = "0200"
-    elif now.hour < 8 or (now.hour == 8 and now.minute <= 10):  # 5시 11분~8시 10분
-        base_date = today_date
-        base_time = "0500"
-    elif now.hour < 11 or (now.hour == 11 and now.minute <= 10):  # 8시 11분~11시 10분
-        base_date = today_date
-        base_time = "0800"
-    elif now.hour < 14 or (now.hour == 14 and now.minute <= 10):  # 11시 11분~14시 10분
-        base_date = today_date
-        base_time = "1100"
-    elif now.hour < 17 or (now.hour == 17 and now.minute <= 10):  # 14시 11분~17시 10분
-        base_date = today_date
-        base_time = "1400"
-    elif now.hour < 20 or (now.hour == 20 and now.minute <= 10):  # 17시 11분~20시 10분
-        base_date = today_date
-        base_time = "1700" 
-    elif now.hour < 23 or (now.hour == 23 and now.minute <= 10):  # 20시 11분~23시 10분
-        base_date = today_date
-        base_time = "2000"
-    else:  # 23시 11분 ~ 23시 59분
-        base_date = today_date
-        base_time = "2300"
+    # api를 가져오려는 시점의 이전 발표시각에 업데이트된 데이터를 base_time, base_date로 설정 -> 취소
+    # 기본값: api를 가져오는 날짜의 전날 23시에 발표된 데이터를 base_time, base_date로 설정
+    base_date = yesterday_date
+    base_time = "2300"
 
-    # 날짜, 예보시각, 위경도 정보 받아오는 변수로 수정해야 함.
     payload = "serviceKey=" + service_key + "&" +\
         "pageNo=" + '1' + '&' +\
         "numOfRows=" + '270' + '&' +\
         "dataType=json" + "&" +\
         "base_date=" + base_date + "&" +\
         "base_time=" + base_time + "&" +\
-        "nx=" + "62" + "&" +\
-        "ny=" + "120"
+        "nx=" + x + "&" +\
+        "ny=" + y
 
-    print(payload)
+    # print(payload)
     
     res = requests.get(weather_url + payload)
-    items = res.json().get('response').get('body').get('items')
-    # print(items)
+    
+    clothes_txt = ''
+    msg = ''
+    try:
+        items = res.json().get('response').get('body').get('items')
+        # print(items)
+        weather_data = dict()
+        tmp_list = []
+        state_list = []
+        for item in items['item']:
+            if item['fcstTime'] in [goingToOffice, goingToOfficeEnd, goingHome, goingHomeEnd]:
+                # 기온
+                if item['category'] == 'TMP':
+                    print(goingToOffice, goingToOfficeEnd)
+                    tmp_list.append(int(item['fcstValue']))
 
+                # 기상상태
+                if item['category'] == 'PTY':
+                    weather_code = item['fcstValue']
+
+                    if weather_code == '1':
+                        weather_state = '비'
+                    elif weather_code == '2':
+                        weather_state = '비/눈'
+                    elif weather_code == '3':
+                        weather_state = '눈'
+                    elif weather_code == '4':
+                        weather_state = '소나기'
+                    else:
+                        weather_state = '없음'
+                
+                    weather_data['code'] = weather_code
+                    state_list.append(weather_state)
+        print(tmp_list)
+        print(state_list)
+
+        max_TMP = max(tmp_list)
+        min_TMP = min(tmp_list)
+        umbrella = '날씨가 좋네요 :)'
+        for state in state_list:
+            if state == '비':
+                umbrella = '비가 와요. 우산을 꼭 챙겨주세요!'
+            elif state == '비/눈':
+                umbrella = '비 또는 눈이 와요. 우산 꼭 챙겨주세요!'
+            elif state == '눈':
+                umbrella = '눈이 와요. 우산을 꼭 챙기세요! 장갑도요!'
+            elif state == '소나기':
+                umbrella = '소나기가 와요. 우산을 꼭 챙겨주세요!'
+        
+        for tmp in tmp_list:
+            clothes_list = []
+            msg_list = []
+            img = ''
+            if tmp <= 5:
+                clothes_data = db.clothes.find_one({'high_TMP': 5})
+                clothes_list.append(clothes_data['clothes'])
+                msg_list.append(clothes_data['msg'])
+                img = clothes_data['img']
+            elif tmp <= 9:
+                clothes_data = db.clothes.find_one({'high_TMP': 9})
+                clothes_list.append(clothes_data['clothes'])
+                msg_list.append(clothes_data['msg'])
+                if not img:
+                    img = clothes_data['img']
+            elif tmp <= 11:
+                clothes_data = db.clothes.find_one({'high_TMP': 11})
+                clothes_list.append(clothes_data['clothes'])
+                msg_list.append(clothes_data['msg'])
+                if not img:
+                    img = clothes_data['img']
+            elif tmp <= 16:
+                clothes_data = db.clothes.find_one({'high_TMP': 16})
+                clothes_list.append(clothes_data['clothes'])
+                msg_list.append(clothes_data['msg'])
+                if not img:
+                    img = clothes_data['img']
+            elif tmp <= 19:
+                clothes_data = db.clothes.find_one({'high_TMP': 19})
+                clothes_list.append(clothes_data['clothes'])
+                msg_list.append(clothes_data['msg'])
+                if not img:
+                    img = clothes_data['img']
+            elif tmp <= 22:
+                clothes_data = db.clothes.find_one({'high_TMP': 22})
+                clothes_list.append(clothes_data['clothes'])
+                msg_list.append(clothes_data['msg'])
+                if not img:
+                    img = clothes_data['img']
+            elif tmp <= 26:
+                clothes_data = db.clothes.find_one({'high_TMP': 26})
+                clothes_list.append(clothes_data['clothes'])
+                msg_list.append(clothes_data['msg'])
+                if not img:
+                    img = clothes_data['img']
+            else:
+                clothes_data = db.clothes.find_one({'high_TMP': 100})
+                print(clothes_data)
+                clothes_list.append(clothes_data['clothes'])
+                msg_list.append(clothes_data['msg'])
+                if not img:
+                    img = clothes_data['img']
+
+            clothes_txt = ', '.join(clothes_list)
+            msg = '\n'.join(msg_list)
+
+        if max_TMP - min_TMP >= 10:
+            msg = '일교차가 10°C 이상이에요. 감기 걸리지 않도록 두꺼운 옷 챙겨가세요!'
+
+    except Exception as ex:
+        print('서버 점검 시간입니다. ', ex)
+    
     
 
-    return render_template('index.html')
+    return render_template('index.html', max_TMP=max_TMP, min_TMP=min_TMP, umbrella=umbrella, clothes_txt=clothes_txt, msg=msg, img=img)
 
 
 @app.route('/update', methods=['POST'])
@@ -133,28 +233,32 @@ def post_join():
 
     join = {'userID': userID_receive, 'pw': pw_receive, 'pw2': pw2_receive,'area': area_receive, 'goingToOffice': goingToOffice_receive2, 'goingHome': goingHome_receive2}
 
-    db.dbweather.insert_one(join)
+    db.users.insert_one(join)
 
     return jsonify({'result': 'success'})
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-        
-        userId = request.form['user_id']
+        userID = request.form['user_id']
         password = request.form['password']
-        user = db.users.find_one({'userId' : userId, 'password': password}, {'password' : False})
+        user = db.users.find_one({'userID' : userID, 'pw': password}, {'pw' : False})
         if user is None:
-            return redirect(url_for('login'))
-        session['userId'] = user['userId']
-        return redirect(url_for('main'))
+            return jsonify({"result" : "fail"})
+        session['userID'] = user['userID']
+        return jsonify({"result" : "success"})
     if session_check():
         return redirect(url_for('main'))
     return render_template('login.html')
 
+@app.route('/logout', methods=["GET"])
+def logout():
+    session.clear()
+    return jsonify({"result" : "success"})
+
 def session_check():
-    userId = session.get('userId')
-    if userId is None:
+    userID = session.get('userID')
+    if userID is None:
         return False
     return True
 
