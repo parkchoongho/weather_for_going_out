@@ -68,7 +68,7 @@
         let pw2 = $("#pw2").val();
         let area = $("#all_village").val(); // 주소 중 '동'만 area로 받음.
         let goingToOffice = $("#goingToOffice").val();
-        let goingHome = $("#goingHome").val(); console.log(goingHome);
+        let goingHome = $("#goingHome").val();
         if (pw != pw2){
             alert("두 비밀번호가 일치하지 않습니다.")
             return
@@ -79,7 +79,13 @@
         $.ajax({
             type: "POST", // POST 방식으로 요청하겠다.
             url: "/join", // /join이라는 url에 요청하겠다.
-            data: {userID_give: userID, pw_give: pw, pw2_give: pw2, area_give: area, goingToOffice_give: goingToOffice, goingHome_give: goingHome}, // 데이터를 주는 방법
+            data: {
+                userID_give: userID,
+                pw_give: pw,
+                pw2_give: pw2,
+                area_give: area,
+                goingToOffice_give: goingToOffice,
+                goingHome_give: goingHome}, // 데이터를 주는 방법
             success: function(response) { // 성공하면
                 if (response["result"] == "success") {
                     alert("회원가입 성공!");

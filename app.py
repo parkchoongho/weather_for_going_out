@@ -36,7 +36,7 @@ def main():
     goingToOfficeEnd = str(int(goingToOffice) + 100)
     goingHome = userData['goingHome'] + '00'
     goingHomeEnd = str(int(goingHome) + 100)
-    # print(goingToOffice)
+    print(goingToOffice)
 
     # 동네 위경도
     village_data = db.grid.find_one({'village': area})
@@ -71,7 +71,7 @@ def main():
 
     payload = "serviceKey=" + service_key + "&" +\
         "pageNo=" + '1' + '&' +\
-        "numOfRows=" + '530' + '&' +\
+        "numOfRows=" + '270' + '&' +\
         "dataType=json" + "&" +\
         "base_date=" + base_date + "&" +\
         "base_time=" + base_time + "&" +\
@@ -94,18 +94,20 @@ def main():
     max_TMP_t = ''
     min_TMP_t = ''
     umbrella_t = ''
-    
+
     try:
         items = res.json().get('response').get('body').get('items')
         # print(items)
         weather_data = dict()
         tmp_list = []
         state_list = []
+
         tmp_list_t = []
         state_list_t = []
 
         for item in items['item']:
             if item['fcstDate'] == today_date and item['fcstTime'] in [goingToOffice, goingToOfficeEnd, goingHome, goingHomeEnd]: 
+
                 # 기온
                 if item['category'] == 'TMP':
                     print(goingToOffice, goingToOfficeEnd)
@@ -130,6 +132,7 @@ def main():
                     state_list.append(weather_state)
 
 
+
             elif item['fcstDate'] == tomorrow_date and item['fcstTime'] in [goingToOffice, goingToOfficeEnd, goingHome, goingHomeEnd]:
                 if item['category'] == 'TMP':
                     tmp_list_t.append(int(item['fcstValue']))
@@ -151,7 +154,6 @@ def main():
                     state_list_t.append(weather_state)
 
         print(tmp_list)
-        print(tmp_list_t)
         print(state_list)
 
         max_TMP = max(tmp_list)
@@ -311,12 +313,13 @@ def main():
 
 @app.route('/update', methods=['POST'])
 def update_user():
-    userID = request.form['uesrID']
-    pw = request.form['pw']
-    pw2 = request.form['pw2']
-    area = request.form['area']
-    goingToOffice = request.form['goingToOffice']
-    goingHome = request.form['goingHome']
+    pw = request.form['pw_give']
+    pw2 = request.form['pw2_give']
+    area = request.form['area_give']
+    goingToOffice = request.form['goingToOffice_give'][0:2]
+    goingHome = request.form['goingHome_give'][0:2]
+
+    userID = session["userID"]
 
     db.users.update_one({'userID': userID}, {
                         '$set': {'pw': pw,
@@ -324,16 +327,17 @@ def update_user():
                                  'area': area,
                                  'goingToOffice': goingToOffice,
                                  'goingHome': goingHome}})
+    return jsonify({'result': 'success'})
 
 @app.route('/update', methods=['GET'])
 def get_update():
     if session_check() == False:
         return redirect(url_for('login'))
-    return render_template('join.html')
+    all_sido = db.grid.distinct("sido")
+    return render_template('update.html', all_sido=all_sido)
 
 
 @app.route('/join', methods=['GET'])
-
 def join_sido():
     if session_check():
         return redirect(url_for('main'))
@@ -366,6 +370,10 @@ def post_join():
     goingHome_receive = request.form['goingHome_give']
     goingHome_receive2 = goingHome_receive[0:2]
 
+    userCheck = list(db.users.find({"userID":userID_receive}))
+    
+    print(userCheck['userID'])
+    prtin('hi')
 
 
     join = {
@@ -380,6 +388,7 @@ def post_join():
     db.users.insert_one(join)
 
     session['userID'] = userID_receive
+    
     if msg == '':
         msg = 'success'
     return jsonify({'result': msg})
