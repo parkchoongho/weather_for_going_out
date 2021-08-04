@@ -71,7 +71,7 @@ def main():
 
     payload = "serviceKey=" + service_key + "&" +\
         "pageNo=" + '1' + '&' +\
-        "numOfRows=" + '270' + '&' +\
+        "numOfRows=" + '530' + '&' +\
         "dataType=json" + "&" +\
         "base_date=" + base_date + "&" +\
         "base_time=" + base_time + "&" +\
