@@ -377,7 +377,6 @@ def join_village():
 
 @app.route('/join', methods=['POST'])
 def post_join():
-    msg = ''
     userID_receive = request.form['userID_give'] 
     pw_receive = request.form['pw_give'] 
     pw2_receive = request.form['pw2_give']
@@ -386,14 +385,15 @@ def post_join():
     goingToOffice_receive2 = goingToOffice_receive[0:2]
     goingHome_receive = request.form['goingHome_give']
     goingHome_receive2 = goingHome_receive[0:2]
+    print(goingHome_receive)
 
-    userCheck = list(db.users.find({"userID":userID_receive}))
-    
-<<<<<<< HEAD
-    print(userCheck['userID'])
+
+    IDCheck = db.users.find_one({"userID":userID_receive})
+    if IDCheck:
+        print('11111111')
+        return jsonify({'result': 'ID 중복'})
     print('hi')
-=======
->>>>>>> 5805e179d016bcd4ae5fdce1476e7b08b0078267
+
 
 
     join = {
@@ -401,17 +401,17 @@ def post_join():
         'pw': pw_receive, 
         'pw2': pw2_receive,
         'area': area_receive, 
-        'goingToOffice': goingToOffice_receive2, 
-        'goingHome': goingHome_receive2
+        'goingToOffice': goingToOffice_receive2,
+        'goingToOfficeT': goingToOffice_receive,
+        'goingHome': goingHome_receive2,
+        'goingHomeT': goingHome_receive
     }
 
     db.users.insert_one(join)
 
     session['userID'] = userID_receive
     
-    if msg == '':
-        msg = 'success'
-    return jsonify({'result': msg})
+    return jsonify({'result': 'success'})
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

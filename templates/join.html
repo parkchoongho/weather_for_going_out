@@ -69,10 +69,16 @@
         let area = $("#all_village").val(); // 주소 중 '동'만 area로 받음.
         let goingToOffice = $("#goingToOffice").val();
         let goingHome = $("#goingHome").val();
+        // console.log(typeof userID)
+        // console.log(pw)
+        // console.log(area)
         if (pw != pw2){
-            alert("두 비밀번호가 일치하지 않습니다.")
-            return
+            alert("두 비밀번호가 일치하지 않습니다.");
+            return;
         }
+        if (userID == "" || pw == "" || pw2 == "" || area == null || goingToOffice == "" || goingHome == ""){
+            alert("모든 입력사항을 채워주세요!")
+            return}
 
 
         // 2. join에 POST 방식으로 생성 요청하기
@@ -91,6 +97,8 @@
                     alert("회원가입 성공!");
                     // 3. 성공 시 페이지 새로고침하기
                     window.location.reload();
+                // } else if (response["result"] == "ID 중복") {
+                //     alert("ID 중복!")
                 } else {
                     alert("회원가입 실패!")
                 }
@@ -204,10 +212,6 @@ function check_pw() {
 
             <button type="button" class="btn btn-primary" onclick="postjoin()">회원 등록</button>
         </div>
-
-        <button type="button" class="btn btn-primary" onclick="postjoin()">
-          회원 등록
-        </button>
       </div>
     </div>
   </body>
