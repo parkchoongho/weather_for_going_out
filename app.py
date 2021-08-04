@@ -1,6 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session
 from pymongo import MongoClient
-# from bson.objectid import ObjectId
 import datetime  # 날짜시간모듈
 from datetime import date, datetime, timedelta  # 현재 날짜 외의 날짜 구하기 위한 모듈
 import requests
@@ -13,7 +12,6 @@ bcrypt = Bcrypt(app)
 
 app.secret_key = 'sdkmcslkcmks'
 app.permanent_session_lifetime = timedelta(minutes=20)
-
 
 client = MongoClient('localhost', 27017)
 db = client.dbweather
@@ -36,7 +34,6 @@ def main():
     goingToOfficeEnd = str(int(goingToOffice) + 100)
     goingHome = userData['goingHome'] + '00'
     goingHomeEnd = str(int(goingHome) + 100)
-    print(goingToOffice)
 
     # 동네 위경도
     village_data = db.grid.find_one({'village': area})
@@ -77,8 +74,6 @@ def main():
         "base_time=" + base_time + "&" +\
         "nx=" + x + "&" +\
         "ny=" + y
-
-    # print(payload)
     
     res = requests.get(weather_url + payload)
     
@@ -97,11 +92,8 @@ def main():
 
     try:
         items = res.json().get('response').get('body').get('items')
-        # print(items)
-        weather_data = dict()
         tmp_list = []
         state_list = []
-
         tmp_list_t = []
         state_list_t = []
 
@@ -109,7 +101,6 @@ def main():
             if item['fcstDate'] == today_date and item['fcstTime'] in [goingToOffice, goingToOfficeEnd, goingHome, goingHomeEnd]: 
                 # 기온
                 if item['category'] == 'TMP':
-                    print(goingToOffice, goingToOfficeEnd)
                     tmp_list.append(int(item['fcstValue']))
 
                 # 기상상태
@@ -127,10 +118,7 @@ def main():
                     else:
                         weather_state = '없음'
                 
-                    weather_data['code'] = weather_code
                     state_list.append(weather_state)
-
-
 
             elif item['fcstDate'] == tomorrow_date and item['fcstTime'] in [goingToOffice, goingToOfficeEnd, goingHome, goingHomeEnd]:
                 if item['category'] == 'TMP':
@@ -148,13 +136,9 @@ def main():
                         weather_state = '소나기'
                     else:
                         weather_state = '없음'
-                
-                    weather_data['code'] = weather_code
+
                     state_list_t.append(weather_state)
 
-        print(tmp_list)
-        print(state_list)
-        tmp_list = [26, 25, 30, 32]
         max_TMP = max(tmp_list)
         min_TMP = min(tmp_list)
         umbrella = 'Nope! 날씨가 좋네요 :)'
@@ -246,8 +230,6 @@ def main():
 
             clothes_txt = ', '.join(clothes_list)
             msg = '\n'.join(msg_list)
-            print(clothes_txt)
-
 
         clothes_list = []
         msg_list = []
@@ -256,60 +238,60 @@ def main():
         for tmp in tmp_list_t:
             if tmp <= 5:
                 clothes_data = db.clothes.find_one({'high_TMP': 5})
-                if chk == 0:
+                if chk != 1:
                     clothes_list.append(clothes_data['clothes'])
                     msg_list.append(clothes_data['msg'])
                     img_t = clothes_data['img']
                 chk = 1
             elif tmp <= 9:
                 clothes_data = db.clothes.find_one({'high_TMP': 9})
-                if chk == 0:
+                if chk != 2:
                     clothes_list.append(clothes_data['clothes'])
                     msg_list.append(clothes_data['msg'])
                     img_t = clothes_data['img']
-                chk = 1
+                chk = 2
             elif tmp <= 11:
                 clothes_data = db.clothes.find_one({'high_TMP': 11})
-                if chk == 0:
+                if chk != 3:
                     clothes_list.append(clothes_data['clothes'])
                     msg_list.append(clothes_data['msg'])
                     img_t = clothes_data['img']
-                chk = 1
+                chk = 3
             elif tmp <= 16:
                 clothes_data = db.clothes.find_one({'high_TMP': 16})
-                if chk == 0:
+                if chk != 4:
                     clothes_list.append(clothes_data['clothes'])
                     msg_list.append(clothes_data['msg'])
                     img_t = clothes_data['img']
-                chk = 1
+                chk = 4
             elif tmp <= 19:
                 clothes_data = db.clothes.find_one({'high_TMP': 19})
-                if chk == 0:
+                if chk != 5:
                     clothes_list.append(clothes_data['clothes'])
                     msg_list.append(clothes_data['msg'])
                     img_t = clothes_data['img']
-                chk = 1
+                chk = 5
             elif tmp <= 22:
                 clothes_data = db.clothes.find_one({'high_TMP': 22})
-                if chk == 0:
+                if chk != 6:
                     clothes_list.append(clothes_data['clothes'])
                     msg_list.append(clothes_data['msg'])
                     img_t = clothes_data['img']
-                chk = 1
+                chk = 6
             elif tmp <= 26:
                 clothes_data = db.clothes.find_one({'high_TMP': 26})
-                if chk == 0:
+                if chk != 7:
                     clothes_list.append(clothes_data['clothes'])
                     msg_list.append(clothes_data['msg'])
                     img_t = clothes_data['img']
-                chk = 1
+                chk = 7
             else:
                 clothes_data = db.clothes.find_one({'high_TMP': 100})
-                if chk == 0:
+                if chk != 8:
                     clothes_list.append(clothes_data['clothes'])
                     msg_list.append(clothes_data['msg'])
                     img_t = clothes_data['img']
-                chk = 1
+                chk = 8
 
             clothes_txt_t = ', '.join(clothes_list)
             msg_t = '\n'.join(msg_list)
@@ -323,8 +305,6 @@ def main():
     except Exception as ex:
         print('서버 점검 시간입니다. ', ex)
     
-    
-
     return render_template('index.html', max_TMP=max_TMP, min_TMP=min_TMP, umbrella=umbrella, clothes_txt=clothes_txt, msg=msg, img=img, max_TMP_t=max_TMP_t, min_TMP_t=min_TMP_t, umbrella_t=umbrella_t, clothes_txt_t=clothes_txt_t, msg_t=msg_t, img_t=img_t )
 
 
@@ -333,7 +313,7 @@ def main():
 def update_user():
     sido_receive = request.form['sido_give']
     sigungu_receive = request.form['sigungu_give']
-    area_receive = request.form['area_give'] # 동 만 받음
+    area_receive = request.form['area_give']
     goingToOffice_receive = request.form['goingToOffice_give']
     goingToOffice_receive2 = goingToOffice_receive[0:2]
     goingHome_receive = request.form['goingHome_give']
@@ -370,9 +350,7 @@ def get_updatepw():
 def update_userpw():
     pw = request.form['pw_give']
     pw3 = request.form['pw3_give']
-
     userID = session["userID"]
-
     user = db.users.find_one({'userID' : userID})
 
     is_right_password = bcrypt.check_password_hash(user['pw'], pw)
@@ -412,19 +390,15 @@ def post_join():
     pw_receive = request.form['pw_give'] 
     sido_receive = request.form['sido_give']
     sigungu_receive = request.form['sigungu_give']
-    area_receive = request.form['area_give'] # 동 만 받음
+    area_receive = request.form['area_give']
     goingToOffice_receive = request.form['goingToOffice_give']
     goingToOffice_receive2 = goingToOffice_receive[0:2]
     goingHome_receive = request.form['goingHome_give']
     goingHome_receive2 = goingHome_receive[0:2]
-    print(goingHome_receive)
-
 
     IDCheck = db.users.find_one({"userID":userID_receive})
     if IDCheck:
-        print('11111111')
         return jsonify({'result': 'ID 중복'})
-    print('hi')
 
     pw_hash = bcrypt.generate_password_hash(pw_receive)
 

@@ -1,10 +1,6 @@
 <!-- @format -->
 {% extends 'head.html' %} {% block content %}
 
-
-
-
-
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -113,13 +109,15 @@
           var max_TMP_tag = '<p>최고 기온: <span style="color: red">' + max_TMP + '°C</span></p>'
           var min_TMP_tag = '<p>최저 기온: <span style="color: blue">' + min_TMP + '°C</span></p>'
           var umbrella_tag = '<p>우산 챙길까? <span style="color: green">' + umbrella + '</span></p>'
-          var msg_tag = '<p>옷 추천: <span style="color: green">' + msg + '</span> ex) ' + clothes_txt + '</p>'
+          var msg_tag = '<p>옷 추천: <span style="color: green">' + msg + '</span></p>'
+          var clothes_ex = '<p>ex) ' + clothes_txt + '</p>'
           var img_tag = "<img id='img' src = '/static/" + img + '.jpg">'
       
           document.getElementById('max_TMP').innerHTML = max_TMP_tag;
           document.getElementById('min_TMP').innerHTML = min_TMP_tag;
           document.getElementById('umbrella').innerHTML = umbrella_tag;
           document.getElementById('msg').innerHTML = msg_tag;
+          document.getElementById('clothes_ex').innerHTML = clothes_ex
           document.getElementById('img').innerHTML = img_tag;
       
           document.getElementById('tomorrow_btn').value = '1';
@@ -148,7 +146,7 @@
       <p id='max_TMP'>최고 기온: <span style="color: red">{{ max_TMP }}°C</span></p>
       <p id='min_TMP'>최저 기온: <span style="color: blue">{{ min_TMP }}°C</span></p>
       <p id='umbrella'>우산 챙길까? <span style="color: green">{{ umbrella }}</span></p>
-      <p id='msg'>옷 추천: <span style="color: green">{{ msg }}</span> ex) {{ clothes_txt }}</p>
+      <p id='msg'>옷 추천: <span style="color: green">{{ msg }}</span></p><p id="clothes_ex">ex) {{ clothes_txt }}</p>
       <div class="text-center">
       <img id='img' src = "/static/{{ img }}.jpg"></div>
       </div></div>
