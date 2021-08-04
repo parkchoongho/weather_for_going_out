@@ -305,7 +305,7 @@ def main():
     
     
 
-    return render_template('index.html', max_TMP=max_TMP, min_TMP=min_TMP, umbrella=umbrella, clothes_txt=clothes_txt, msg=msg, img=img, max_TMP_t=max_TMP_t, min_TMP_t=min_TMP_t, umbrella_t=umbrella_t, clothes_txt_t=clothes_txt_t, msg_t=msg_t, img_t=img_t)
+    return render_template('index.html', max_TMP=max_TMP, min_TMP=min_TMP, umbrella=umbrella, clothes_txt=clothes_txt, msg=msg, img=img, max_TMP_t=max_TMP_t, min_TMP_t=min_TMP_t, umbrella_t=umbrella_t, clothes_txt_t=clothes_txt_t, msg_t=msg_t, img_t=img_t )
 
 
 
