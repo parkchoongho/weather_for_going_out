@@ -333,8 +333,26 @@ def get_update():
     if session_check() == False:
         return redirect(url_for('login'))
     all_sido = db.grid.distinct("sido")
-    return render_template('update.html', all_sido=all_sido)
+    user = db.users.find_one({"userID" : session["userID"]})
+    return render_template('update.html', all_sido=all_sido, user=user)
 
+@app.route('/updatepw', methods=['GET'])
+def get_updatepw():
+    if session_check() == False:
+        return redirect(url_for('login'))
+    return render_template('updatepw.html', userID=session['userID'])
+
+@app.route('/updatepw', methods=['POST'])
+def update_userpw():
+    pw = request.form['pw_give']
+    pw2 = request.form['pw2_give']
+
+    userID = session["userID"]
+
+    db.users.update_one({'userID': userID}, {
+                        '$set': {'pw': pw,
+                                 'pw2': pw2}})
+    return jsonify({'result': 'success'})
 
 @app.route('/join', methods=['GET'])
 def join_sido():
@@ -371,8 +389,11 @@ def post_join():
 
     userCheck = list(db.users.find({"userID":userID_receive}))
     
+<<<<<<< HEAD
     print(userCheck['userID'])
-    prtin('hi')
+    print('hi')
+=======
+>>>>>>> 5805e179d016bcd4ae5fdce1476e7b08b0078267
 
 
     join = {

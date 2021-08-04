@@ -181,35 +181,15 @@
             id="userID"
             type="email"
             class="form-control"
-            placeholder=""
+            placeholder="{{user['userID']}}"
             disabled
-          />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">PW</label>
-          <input
-            id="pw"
-            type="password"
-            class="form-control"
-            placeholder=""
-            onchange="check_pw(this)"
-          />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword2">PW 확인</label>
-          <input
-            id="pw2"
-            type="password"
-            class="form-control"
-            placeholder=""
-            onchange="check_pw(this)"
           />
         </div>
         <div><span id="pwCheck"></span></div>
         <label>시도</label><br />
         <select name="sido" method="GET" action="/" onchange="sidoChange(this)">
           {% for sido in all_sido %}
-          <option value="{{sido}}" selected>{{sido}}</option>
+          <option value="{{sido}}">{{sido}}</option>
           {% endfor %}
         </select>
         <br /><br />
@@ -230,8 +210,9 @@
 
         <label>읍면동</label><br />
         <select id="all_village" name="village" method="GET" action="/">
+          <option value="{{user['area']}}" selected>{{user['area']}}</option>
           {% for village in all_village %}
-          <option value="{{village}}" selected>{{village}}</option>
+          <option value="{{village}}">{{village}}</option>
           {% endfor %}
         </select>
         <br /><br />
