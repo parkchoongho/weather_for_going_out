@@ -66,7 +66,7 @@
         let userID = $("#userID").val();
         let pw = $("#pw").val();
         let pw2 = $("#pw2").val();
-        let area = $("#area").val();
+        let area = $("#all_village").val(); // 주소 중 '동'만 area로 받음.
         let goingToOffice = $("#goingToOffice").val();
         let goingHome = $("#goingHome").val();
         console.log(goingHome);
@@ -93,40 +93,115 @@
               window.location.reload();
             } else {
               alert("회원가입 실패!");
+            }}
+        })
+    } 
+
+function check_pw() {
+
+        if(document.getElementById('pw').value==document.getElementById('pw2').value){
+            document.getElementById('pwCheck').innerHTML='비밀번호가 일치합니다.'
+            document.getElementById('pwCheck').style.color='blue';
+        }
+        else{
+            document.getElementById('pwCheck').innerHTML='비밀번호가 일치하지 않습니다.';
+            document.getElementById('pwCheck').style.color='red';
+        }
+        }
+
+    function sidoChange(e) {
+        console.log(e.value)
+
+        $.ajax({
+            type: "GET",
+            url: `join_sigungu?sido_give=${e.value}`, // GET은 data가 아니라 url로 받아야함, javascript 문장열 안 변수 넣을 때 백틱+${}이용
+            data: {},
+            success: function(response){
+                console.log(response)
+                var target = document.getElementById("all_sigungu");
+            
+                target.options.length = 0; // dropdown항목 처음 초기화
+                for (x in response['all_sigungu']) {
+                var opt = document.createElement("option");
+                opt.value = response['all_sigungu'][x];
+                opt.innerHTML = response['all_sigungu'][x]; // 실제 dropdown에 표시되는 값
+                target.appendChild(opt); // 추가
+                } 
             }
-          },
-        });
-      }
+        }) 
+    }
+    
+    function sigunguChange(e) {
+        console.log(e.value)
+
+        $.ajax({
+            type: "GET",
+            url: `join_village?sigungu_give=${e.value}`,
+            data: {},
+            success: function(response){
+                console.log(response)
+                var target = document.getElementById("all_village");
+            
+                target.options.length = 0;
+                for (x in response['all_village']) {
+                var opt = document.createElement("option");
+                opt.value = response['all_village'][x];
+                opt.innerHTML = response['all_village'][x];
+                target.appendChild(opt);
+                } 
+            }
+        }) 
+    }
     </script>
   </head>
 
   <body>
     <div class="wrap">
-      <div class="posting-box">
-        <div class="form-group">
-          <label for="exampleInputEmail1">ID</label>
-          <input id="userID" type="email" class="form-control" placeholder="" />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">PW</label>
-          <input id="pw" type="password" class="form-control" placeholder="" />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword2">PW 확인</label>
-          <input id="pw2" type="password" class="form-control" placeholder="" />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputEmail1">지역</label>
-          <input id="area" type="email" class="form-control" placeholder="" />
-        </div>
+        <div class="posting-box">
+            <div class="form-group">
+                <label for="exampleInputEmail1">ID</label>
+                <input id="userID" type="email" class="form-control" placeholder="">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">PW</label>
+                <input id="pw" type="password" class="form-control" placeholder="" onchange="check_pw(this)">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword2">PW 확인</label>
+                <input id="pw2" type="password" class="form-control" placeholder="" onchange="check_pw(this)">
+            </div>
+            <div><span id="pwCheck"></span></div>
+            <label>시도</label><br>
+            <select name= sido method="GET" action="/" onchange="sidoChange(this)">
+                {% for sido in all_sido %}
+                <option value= "{{sido}}" SELECTED>{{sido}}</option>
+                {% endfor %}
+            </select> <br><br>
+            
+            <label>시군구</label><br>
+            <select id="all_sigungu" name=sigungu method="GET" action="/" onchange="sigunguChange(this)">
+                {% for sigungu in all_sigungu %}
+                <option value= "{{sigungu}}" SELECTED>{{sigungu}}</option>
+                {% endfor %}
+            </select> <br><br>
 
-        <div class="form-group">
-          <label for="exampleInputEmail1">출근 시간</label>
-          <p><input id="goingToOffice" type="time" placeholder="" /></p>
-        </div>
-        <div class="form-group">
-          <label>퇴근 시간</label>
-          <p><input id="goingHome" type="time" /></p>
+            <label>읍면동</label><br>
+            <select id="all_village" name=village method="GET" action="/">
+                {% for village in all_village %}
+                <option value= "{{village}}" SELECTED>{{village}}</option>
+                {% endfor %}
+            </select> <br><br>
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">출근 시간</label>
+                <p><input id="goingToOffice" type="time" placeholder=""></p>
+            </div>
+            <div class="form-group">
+                <label>퇴근 시간</label>
+                <p><input id="goingHome" type="time"></p>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="postjoin()">회원 등록</button>
         </div>
 
         <button type="button" class="btn btn-primary" onclick="postjoin()">
