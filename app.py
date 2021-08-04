@@ -309,6 +309,7 @@ def main():
     return render_template('index.html', max_TMP=max_TMP, min_TMP=min_TMP, umbrella=umbrella, clothes_txt=clothes_txt, msg=msg, img=img)
 
 
+
 @app.route('/update', methods=['POST'])
 def update_user():
     pw = request.form['pw_give']
