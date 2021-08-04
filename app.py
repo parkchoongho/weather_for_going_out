@@ -241,12 +241,17 @@ def login():
         password = request.form['password']
         user = db.users.find_one({'userID' : userID, 'pw': password}, {'pw' : False})
         if user is None:
-            return redirect(url_for('login'))
+            return jsonify({"result" : "fail"})
         session['userID'] = user['userID']
         return jsonify({"result" : "success"})
     if session_check():
         return redirect(url_for('main'))
     return render_template('login.html')
+
+@app.route('/logout', methods=["GET"])
+def logout():
+    session.clear()
+    return jsonify({"result" : "success"})
 
 def session_check():
     userID = session.get('userID')

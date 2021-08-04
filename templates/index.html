@@ -1,12 +1,41 @@
-{% extends 'head.html' %}
+<!-- @format -->
+{% extends 'head.html' %} {% block content %}
 
-{% block content %}
-    <p>이 사이트는 사용자가 <b>실외에 있는 시간</b>을 기준으로 최고 기온, 최저 기온, 우산 여부 안내 및 적절한 옷차림을 추천해주는 서비스입니다.</p>
-    <button>로그아웃</button><button>정보수정</button><br>
-    <button>내일날씨</button>
-    <p>최고 기온: {{ max_TMP }}°C</p>
-    <p>최저 기온: {{ min_TMP }}°C</p>
-    <p>우산 챙길까? {{ umbrella }}</p>
-    <p>옷 추천: {{ msg }} ex) {{ clothes_txt }}</p>
-    <img src = "/static/{{ img }}.jpg">
+<p>
+  이 사이트는 사용자가 <b>실외에 있는 시간</b>을 기준으로 최고 기온, 최저 기온,
+  우산 여부 안내 및 적절한 옷차림을 추천해주는 서비스입니다.
+</p>
+<button onclick="logout()">로그아웃</button><button>정보수정</button><br />
+<button>내일날씨</button>
+<p>최고 기온: {{ max_TMP }}°C</p>
+<p>최저 기온: {{ min_TMP }}°C</p>
+<p>우산 챙길까? {{ umbrella }}</p>
+<p>옷 추천: {{ msg }} ex) {{ clothes_txt }}</p>
+<img src = "/static/{{ img }}.jpg">
+<script
+  type="text/javascript"
+  src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+  integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+  crossorigin="anonymous"
+></script>
+<script type="text/javascript">
+  function logout() {
+    $.ajax({
+      method: "GET",
+      url: "logout",
+      data: {},
+      success: function (response) {
+        if (response["result"] === "success") {
+          alert("로그아웃 되셨습니다!");
+        }
+        window.location.reload();
+      },
+    });
+  }
+</script>
+
 {% endblock %}
