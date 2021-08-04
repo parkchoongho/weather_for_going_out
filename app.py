@@ -213,6 +213,13 @@ def update_user():
                                  'goingToOffice': goingToOffice,
                                  'goingHome': goingHome}})
 
+@app.route('/update', methods=['GET'])
+def get_update():
+    if session_check() == False:
+        return redirect(url_for('login'))
+    return render_template('join.html')
+
+
 @app.route('/join', methods=['GET'])
 def get_join():
     return render_template('join.html')
