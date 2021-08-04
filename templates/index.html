@@ -6,7 +6,7 @@
   우산 여부 안내 및 적절한 옷차림을 추천해주는 서비스입니다.
 </p>
 <button onclick="logout()">로그아웃</button><a href="/update"><button>정보수정</button></a><br />
-<button onclick="tomorrow('{{ max_TMP_t }}', '{{ min_TMP_t }}', '{{ umbrella_t }}', '{{ msg_t }}', '{{ clothes_txt_t }}', '{{ img_t }}')">내일 날씨</button>
+<button id='tomorrow_btn' value='0' onclick="tomorrow('{{ max_TMP_t }}', '{{ min_TMP_t }}', '{{ umbrella_t }}', '{{ msg_t }}', '{{ clothes_txt_t }}', '{{ img_t }}')">내일 날씨</button>
 <p id='max_TMP'>최고 기온: {{ max_TMP }}°C</p>
 <p id='min_TMP'>최저 기온: {{ min_TMP }}°C</p>
 <p id='umbrella'>우산 챙길까? {{ umbrella }}</p>
@@ -38,7 +38,10 @@
   }
 
   function tomorrow(max_TMP, min_TMP, umbrella, msg, clothes_txt, img) {
-      console.log('1111111111')
+    if (document.getElementById('tomorrow_btn').value == '1') {
+        window.location.reload();
+        return
+    }
     var max_TMP_tag = '<p>최고 기온: ' + max_TMP + '°C</p>'
     var min_TMP_tag = '<p>최저 기온: ' + min_TMP + '°C</p>'
     var umbrella_tag = '<p>우산 챙길까? ' + umbrella + '</p>'
@@ -50,6 +53,9 @@
     document.getElementById('umbrella').innerHTML = umbrella_tag;
     document.getElementById('msg').innerHTML = msg_tag;
     document.getElementById('img').innerHTML = img_tag;
+
+    document.getElementById('tomorrow_btn').value = '1';
+    document.getElementById('tomorrow_btn').innerText = '오늘 날씨';
   }
 </script>
 

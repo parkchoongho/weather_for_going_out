@@ -347,6 +347,7 @@ def join_village():
 
 @app.route('/join', methods=['POST'])
 def post_join():
+    msg = ''
     userID_receive = request.form['userID_give'] 
     pw_receive = request.form['pw_give'] 
     pw2_receive = request.form['pw2_give']
@@ -355,6 +356,8 @@ def post_join():
     goingToOffice_receive2 = goingToOffice_receive[0:2]
     goingHome_receive = request.form['goingHome_give']
     goingHome_receive2 = goingHome_receive[0:2]
+
+
 
     join = {
         'userID': userID_receive, 
@@ -368,8 +371,9 @@ def post_join():
     db.users.insert_one(join)
 
     session['userID'] = userID_receive
-
-    return jsonify({'result': 'success'})
+    if msg == '':
+        msg = 'success'
+    return jsonify({'result': msg})
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
