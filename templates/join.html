@@ -105,8 +105,8 @@
                     alert("회원가입 성공!");
                     // 3. 성공 시 페이지 새로고침하기
                     window.location.reload();
-                // } else if (response["result"] == "ID 중복") {
-                //     alert("ID 중복!")
+                } else if (response["result"] == "ID 중복") {
+                    alert("ID 중복!")
                 } else {
                     alert("회원가입 실패!")
                 }

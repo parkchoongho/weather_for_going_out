@@ -58,6 +58,7 @@ def main():
     # 오늘
     today = datetime.today()  # 현재 지역 날짜 반환
     today_date = today.strftime("%Y%m%d")  # 오늘의 날짜 (연도/월/일 반환)
+    print(today_date)
 
     # 내일
     tomorrow = date.today() + timedelta(days=1)
@@ -78,7 +79,7 @@ def main():
         "nx=" + x + "&" +\
         "ny=" + y
 
-    # print(payload)
+    print(payload)
     
     res = requests.get(weather_url + payload)
     
@@ -154,7 +155,7 @@ def main():
 
         print(tmp_list)
         print(state_list)
-        tmp_list = [26, 25, 30, 32]
+        # tmp_list = [26, 25, 30, 32]
         max_TMP = max(tmp_list)
         min_TMP = min(tmp_list)
         umbrella = 'Nope! 날씨가 좋네요 :)'
