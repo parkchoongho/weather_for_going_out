@@ -71,19 +71,20 @@
         let userID = $("#userID").val();
         let pw = $("#pw").val();
         let pw2 = $("#pw2").val();
-        let area = $("#all_village").val();
-        let goingToOffice = $("#goingToOffice").val();
-        let goingHome = $("#goingHome").val();
         let all_sido = $("#all_sido").val();
         let all_sigungu = $("#all_sigungu").val();
+        let area = $("#all_village").val(); // 주소 중 '동'만 area로 받음.
+        let goingToOffice = $("#goingToOffice").val();
+        let goingHome = $("#goingHome").val();
 
         if (pw != pw2){
             alert("두 비밀번호가 일치하지 않습니다.");
             return;
         }
         if (userID == "" || pw == "" || pw2 == "" || area == null || goingToOffice == "" || goingHome == ""){
-            alert("모든 입력사항을 채워주세요!")
-            return}
+            alert("모든 입력사항을 입력해주세요!");
+            return;
+        }
 
         // 2. join에 POST 방식으로 생성 요청하기
         $.ajax({
@@ -96,16 +97,15 @@
                 sigungu_give: all_sigungu,
                 area_give: area,
                 goingToOffice_give: goingToOffice,
-                goingHome_give: goingHome}, // 데이터를 주는 방법
+                goingHome_give: goingHome}, // 서버에 데이터를 주기
             success: function(response) { // 성공하면
                 if (response["result"] == "success") {
                     alert("회원가입 성공!");
-                    // 3. 성공 시 페이지 새로고침하기
-                    window.location.reload();
+                    window.location.reload(); // 3. 성공 시 페이지 새로고침하기
                 } else if (response["result"] == "ID 중복") {
-                    alert("ID 중복!")
+                    alert("ID 중복!");
                 } else {
-                    alert("회원가입 실패!")
+                    alert("회원가입 실패!");
                 }
             }
         })
@@ -114,7 +114,7 @@
 function check_pw() {
 
         if(document.getElementById('pw').value==document.getElementById('pw2').value){
-            document.getElementById('pwCheck').innerHTML='비밀번호가 일치합니다.'
+            document.getElementById('pwCheck').innerHTML='비밀번호가 일치합니다.';
             document.getElementById('pwCheck').style.color='blue';
         }
         else{
@@ -124,18 +124,15 @@ function check_pw() {
         }
 
     function sidoChange(e) {
-        console.log(e.value)
-
         $.ajax({
             type: "GET",
             url: `join_sigungu?sido_give=${e.value}`, // GET은 data가 아니라 url로 받아야함, javascript 문장열 안 변수 넣을 때 백틱+${}이용
             data: {},
             success: function(response){
-                console.log(response)
                 var target = document.getElementById("all_sigungu");
                 var target2 = document.getElementById("all_village");
                 target.options.length = 0; // dropdown항목 처음 초기화
-                target2.options.length = 0; // dropdown항목 처음 초기화
+                target2.options.length = 0;
                 var opt = document.createElement("option");
                 opt.value = 'none';
                 opt.innerHTML = '===== 선택 =====';
@@ -155,16 +152,12 @@ function check_pw() {
     }
     
     function sigunguChange(e) {
-        console.log(e.value)
-
         $.ajax({
             type: "GET",
             url: `join_village?sigungu_give=${e.value}`,
             data: {},
             success: function(response){
-                console.log(response)
                 var target = document.getElementById("all_village");
-            
                 target.options.length = 0;
                 var opt = document.createElement("option");
                 opt.value = 'none';
