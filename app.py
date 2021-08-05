@@ -235,7 +235,7 @@ def main():
         msg_list = []
         img_t = ''
         chk = 0
-        for tmp in tmp_list_t:
+        for tmp in [max_TMP_t, min_TMP_t]:
             if tmp <= 5:
                 clothes_data = db.clothes.find_one({'high_TMP': 5})
                 if chk != 1:
